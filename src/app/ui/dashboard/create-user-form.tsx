@@ -20,20 +20,20 @@ export default function CreateUserForm() {
 
     if (showSuccess) {
         return (
-            <div className="rounded-xl bg-white p-8 shadow-sm border border-green-100 ring-1 ring-green-500/10 text-center">
-                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-50 mb-4 ring-1 ring-green-100">
-                    <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="rounded-3xl bg-[#fdfcf8] p-8 shadow-sm border border-[#e5e5e5] text-center">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-[#ccd5ae]/20 mb-4 ring-1 ring-[#ccd5ae]/50">
+                    <svg className="h-8 w-8 text-[#5a5f3f]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">User Created!</h3>
-                <p className="mt-2 text-sm text-gray-500">
+                <h3 className="text-xl font-bold text-[#2d2a26]">User Created!</h3>
+                <p className="mt-2 text-sm text-[#78716c]">
                     The new admin user has been successfully added. They can now log in to the dashboard.
                 </p>
                 <div className="mt-8">
                     <Link
                         href="/dashboard"
-                        className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all"
+                        className="inline-flex items-center justify-center rounded-xl bg-[#d4a373] px-6 py-3 text-sm font-semibold text-[#1c1917] shadow-sm hover:bg-[#c99563] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4a373] transition-all transform hover:scale-105"
                     >
                         Return to Dashboard
                     </Link>
@@ -43,10 +43,10 @@ export default function CreateUserForm() {
     }
 
     return (
-        <form action={dispatch} className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+        <form action={dispatch} className="bg-[#fdfcf8] rounded-3xl shadow-sm border border-[#e5e5e5] p-8">
             <div className="space-y-6">
                 <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-[#a8a29e] mb-2">
                         Full Name
                     </label>
                     <input
@@ -54,13 +54,13 @@ export default function CreateUserForm() {
                         name="name"
                         type="text"
                         placeholder="John Doe"
-                        className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2.5 px-3"
+                        className="block w-full rounded-xl border-[#e5e5e5] bg-white shadow-sm focus:border-[#d4a373] focus:ring-[#d4a373] sm:text-sm py-3 px-4 transition-all"
                         required
                     />
                 </div>
 
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-[#a8a29e] mb-2">
                         Email Address
                     </label>
                     <input
@@ -68,13 +68,13 @@ export default function CreateUserForm() {
                         name="email"
                         type="email"
                         placeholder="john@example.com"
-                        className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2.5 px-3"
+                        className="block w-full rounded-xl border-[#e5e5e5] bg-white shadow-sm focus:border-[#d4a373] focus:ring-[#d4a373] sm:text-sm py-3 px-4 transition-all"
                         required
                     />
                     <div aria-live="polite" aria-atomic="true">
                         {state.errors?.email &&
                             state.errors.email.map((error: string) => (
-                                <p key={error} className="mt-2 text-sm text-red-600">
+                                <p key={error} className="mt-2 text-sm text-[#bc8a5f]">
                                     {error}
                                 </p>
                             ))}
@@ -82,7 +82,7 @@ export default function CreateUserForm() {
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-[#a8a29e] mb-2">
                         Password
                     </label>
                     <input
@@ -90,14 +90,14 @@ export default function CreateUserForm() {
                         name="password"
                         type="password"
                         placeholder="••••••••"
-                        className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2.5 px-3"
+                        className="block w-full rounded-xl border-[#e5e5e5] bg-white shadow-sm focus:border-[#d4a373] focus:ring-[#d4a373] sm:text-sm py-3 px-4 transition-all"
                         required
                         minLength={6}
                     />
                     <div aria-live="polite" aria-atomic="true">
                         {state.errors?.password &&
                             state.errors.password.map((error: string) => (
-                                <p key={error} className="mt-2 text-sm text-red-600">
+                                <p key={error} className="mt-2 text-sm text-[#bc8a5f]">
                                     {error}
                                 </p>
                             ))}
@@ -106,7 +106,7 @@ export default function CreateUserForm() {
 
                 <div aria-live="polite" aria-atomic="true">
                     {state.message && (
-                        <p className="text-sm text-red-600 bg-red-50 p-3 rounded-md">{state.message}</p>
+                        <p className="text-sm text-[#bc8a5f] bg-[#bc8a5f]/10 p-3 rounded-xl border border-[#bc8a5f]/20">{state.message}</p>
                     )}
                 </div>
             </div>
@@ -114,13 +114,13 @@ export default function CreateUserForm() {
             <div className="mt-8 flex items-center justify-end gap-x-4">
                 <Link
                     href="/dashboard"
-                    className="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-700"
+                    className="text-sm font-semibold leading-6 text-[#78716c] hover:text-[#2d2a26]"
                 >
                     Cancel
                 </Link>
                 <button
                     type="submit"
-                    className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all"
+                    className="rounded-xl bg-[#1c1917] px-6 py-3 text-sm font-semibold text-[#fdfcf8] shadow-sm hover:bg-[#2d2a26] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c1917] transition-all transform hover:scale-105"
                 >
                     Create User
                 </button>

@@ -4,20 +4,20 @@ export default function SideNav() {
     return (
         <div className="flex h-full flex-col px-4 py-6">
             <Link
-                className="mb-6 flex h-32 items-end justify-start rounded-3xl bg-gradient-to-br from-[#d4a373] to-[#bc8a5f] p-6 shadow-xl shadow-orange-900/10 group relative overflow-hidden transition-transform hover:scale-[1.02]"
+                className="mb-6 flex h-32 items-end justify-start rounded-3xl bg-gradient-to-br from-[#d4a373] to-[#bc8a5f] p-6 shadow-xl shadow-[#d4a373]/20 group relative overflow-hidden transition-transform hover:scale-[1.02]"
                 href="/"
             >
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-white/20 blur-2xl"></div>
-                <div className="w-full text-white relative z-10">
-                    <h2 className="text-xs font-medium opacity-80 uppercase tracking-widest">Workspace</h2>
+                <div className="w-full text-[#fdfcf8] relative z-10">
+                    <h2 className="text-xs font-medium opacity-90 uppercase tracking-widest text-[#fdfcf8]/80">Workspace</h2>
                     <h1 className="text-2xl font-bold font-sans tracking-tight mt-1">Alaqmar</h1>
                 </div>
             </Link>
 
-            <div className="flex grow flex-col justify-between space-y-2 rounded-3xl bg-white/40 dark:bg-stone-900/40 backdrop-blur-xl border border-white/40 dark:border-white/5 p-4 shadow-sm">
+            <div className="flex grow flex-col justify-between space-y-2 rounded-3xl bg-white/40 dark:bg-[#1c1917]/40 backdrop-blur-xl border border-white/40 dark:border-white/5 p-4 shadow-sm">
                 <div className="space-y-2">
                     <div className="px-3 py-2">
-                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Menu</h3>
+                        <h3 className="text-xs font-semibold text-[#a8a29e] uppercase tracking-wider">Menu</h3>
                     </div>
                     <NavLinks />
                 </div>
@@ -29,8 +29,8 @@ export default function SideNav() {
                         await signOut();
                     }}
                 >
-                    <button className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-stone-100 dark:hover:bg-white/5 transition-all duration-200 group">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 dark:bg-white/5 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 text-gray-500 group-hover:text-red-500 transition-colors">
+                    <button className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-sm font-medium text-[#57534e] dark:text-[#d6d3d1] hover:bg-[#f5f5f4] dark:hover:bg-white/5 transition-all duration-200 group">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5f5f4] dark:bg-white/5 group-hover:bg-red-50 dark:group-hover:bg-red-900/20 text-[#a8a29e] group-hover:text-red-500 transition-colors">
                             <PowerIcon className="w-5" />
                         </div>
                         <div className="hidden md:block">Sign Out</div>
@@ -57,9 +57,9 @@ function NavLinks() {
                     <Link
                         key={link.name}
                         href={link.href}
-                        className="flex items-center gap-3 rounded-2xl p-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-white/60 dark:hover:bg-white/10 hover:shadow-sm transition-all duration-200 group"
+                        className="flex items-center gap-3 rounded-2xl p-3 text-sm font-medium text-[#57534e] dark:text-[#d6d3d1] hover:bg-[#d4a373]/10 dark:hover:bg-[#d4a373]/20 hover:text-[#d4a373] dark:hover:text-[#d4a373] transition-all duration-200 group"
                     >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white dark:bg-white/5 shadow-sm group-hover:scale-105 transition-transform text-orange-900/70 dark:text-orange-100/70">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/60 dark:bg-white/5 shadow-sm group-hover:bg-[#d4a373]/20 transition-colors text-[#78716c] dark:text-[#d6d3d1] group-hover:text-[#d4a373]">
                             <LinkIcon className="w-5" />
                         </div>
                         <p className="hidden md:block">{link.name}</p>

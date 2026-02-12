@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers"; // Import locally since it's in the same dir now
 
+export const preferredRegion = ['sin1']
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

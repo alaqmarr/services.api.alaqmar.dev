@@ -8,12 +8,12 @@ export default function SetupForm() {
     const [state, dispatch] = useFormState(setupAdmin, initialState);
 
     return (
-        <form action={dispatch} className="space-y-4">
+        <form action={dispatch} className="space-y-5 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-8">
             {/* Name */}
             <div>
                 <label
                     htmlFor="name"
-                    className="mb-2 block text-xs font-medium text-gray-900"
+                    className="mb-2 block text-xs font-medium text-[#a8a29e] uppercase tracking-wider"
                 >
                     Name
                 </label>
@@ -22,7 +22,7 @@ export default function SetupForm() {
                     name="name"
                     type="text"
                     placeholder="Admin Name"
-                    className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-3 text-sm outline-2 placeholder:text-gray-500 text-black"
+                    className="peer block w-full rounded-xl border border-white/10 bg-black/20 py-[10px] pl-4 text-sm outline-none text-[#fdfcf8] placeholder:text-[#78716c] focus:border-[#d4a373]/50 focus:ring-1 focus:ring-[#d4a373]/50 transition-all"
                 />
             </div>
 
@@ -30,7 +30,7 @@ export default function SetupForm() {
             <div>
                 <label
                     htmlFor="email"
-                    className="mb-2 block text-xs font-medium text-gray-900"
+                    className="mb-2 block text-xs font-medium text-[#a8a29e] uppercase tracking-wider"
                 >
                     Email
                 </label>
@@ -39,14 +39,14 @@ export default function SetupForm() {
                     name="email"
                     type="email"
                     placeholder="Enter your email address"
-                    className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-3 text-sm outline-2 placeholder:text-gray-500 text-black"
+                    className="peer block w-full rounded-xl border border-white/10 bg-black/20 py-[10px] pl-4 text-sm outline-none text-[#fdfcf8] placeholder:text-[#78716c] focus:border-[#d4a373]/50 focus:ring-1 focus:ring-[#d4a373]/50 transition-all"
                     required
                 />
                 <div id="email-error" aria-live="polite" aria-atomic="true">
                     {state.errors?.email &&
                         //@ts-ignore
                         state.errors.email.map((error: string) => (
-                            <p key={error} className="mt-2 text-sm text-red-500">
+                            <p key={error} className="mt-2 text-sm text-[#bc8a5f]">
                                 {error}
                             </p>
                         ))}
@@ -57,7 +57,7 @@ export default function SetupForm() {
             <div>
                 <label
                     htmlFor="password"
-                    className="mb-2 block text-xs font-medium text-gray-900"
+                    className="mb-2 block text-xs font-medium text-[#a8a29e] uppercase tracking-wider"
                 >
                     Password
                 </label>
@@ -66,7 +66,7 @@ export default function SetupForm() {
                     name="password"
                     type="password"
                     placeholder="Enter password"
-                    className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-3 text-sm outline-2 placeholder:text-gray-500 text-black"
+                    className="peer block w-full rounded-xl border border-white/10 bg-black/20 py-[10px] pl-4 text-sm outline-none text-[#fdfcf8] placeholder:text-[#78716c] focus:border-[#d4a373]/50 focus:ring-1 focus:ring-[#d4a373]/50 transition-all"
                     required
                     minLength={6}
                 />
@@ -74,7 +74,7 @@ export default function SetupForm() {
                     {state.errors?.password &&
                         //@ts-ignore
                         state.errors.password.map((error: string) => (
-                            <p key={error} className="mt-2 text-sm text-red-500">
+                            <p key={error} className="mt-2 text-sm text-[#bc8a5f]">
                                 {error}
                             </p>
                         ))}
@@ -83,7 +83,7 @@ export default function SetupForm() {
 
             <div aria-live="polite" aria-atomic="true">
                 {state.message && (
-                    <p className="text-sm text-red-500">{state.message}</p>
+                    <p className="text-sm text-[#bc8a5f]">{state.message}</p>
                 )}
             </div>
 
@@ -97,7 +97,7 @@ function SubmitButton() {
 
     return (
         <button
-            className="mt-4 w-full rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+            className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#d4a373] to-[#bc8a5f] px-4 py-3 text-sm font-bold text-[#1c1917] shadow-lg shadow-[#d4a373]/20 transition-all hover:scale-[1.02] hover:shadow-[#d4a373]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4a373] aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
             type="submit"
             aria-disabled={pending}
         >

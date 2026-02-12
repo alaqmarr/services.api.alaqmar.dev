@@ -39,17 +39,17 @@ export default function ClientTable({
             {/* Mobile View (Cards) */}
             <div className="grid grid-cols-1 gap-6 md:hidden">
                 {clients?.map((client) => (
-                    <div key={client.id} className="relative overflow-hidden rounded-3xl border border-white/40 dark:border-white/5 bg-white/60 dark:bg-stone-800/40 p-6 shadow-sm backdrop-blur-sm">
+                    <div key={client.id} className="relative overflow-hidden rounded-3xl border border-[#e5e5e5] bg-[#fdfcf8]/80 dark:bg-[#1c1917]/80 p-6 shadow-sm backdrop-blur-md">
                         <div className="flex items-start justify-between mb-6">
                             <div className="flex items-center gap-4">
-                                <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 dark:from-stone-700 dark:to-stone-600 flex items-center justify-center text-orange-900 dark:text-orange-100 font-bold text-lg shadow-inner">
+                                <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-[#d4a373] to-[#bc8a5f] flex items-center justify-center text-[#fdfcf8] font-bold text-lg shadow-inner">
                                     {getInitials(client.name)}
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white text-lg">{client.name}</h3>
+                                    <h3 className="font-semibold text-[#2d2a26] dark:text-[#fdfcf8] text-lg">{client.name}</h3>
                                     <div className="flex items-center gap-2">
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">{client.domain}</p>
-                                        <span className="text-xs px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-700 text-stone-600 dark:text-stone-300 font-medium">
+                                        <p className="text-sm text-[#78716c] dark:text-[#a8a29e]">{client.domain}</p>
+                                        <span className="text-xs px-2 py-0.5 rounded-full bg-[#f5f5f4] dark:bg-white/5 text-[#57534e] dark:text-[#d6d3d1] font-medium border border-[#e5e5e5] dark:border-white/10">
                                             {client.plan}
                                         </span>
                                     </div>
@@ -66,19 +66,19 @@ export default function ClientTable({
                                     <>
                                         <div className="flex justify-between items-end mb-2">
                                             <div>
-                                                <p className="text-xs text-gray-500 uppercase tracking-wider">Renewal</p>
-                                                <p className="text-sm font-semibold text-gray-900 dark:text-gray-200 mt-0.5">
+                                                <p className="text-xs text-[#a8a29e] uppercase tracking-wider">Renewal</p>
+                                                <p className="text-sm font-semibold text-[#2d2a26] dark:text-[#e6ccb2] mt-0.5">
                                                     {nextRenewal.toLocaleDateString()}
                                                 </p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-2xl font-bold text-gray-900 dark:text-white">{daysRemaining}</p>
-                                                <p className="text-xs text-gray-500">days left</p>
+                                                <p className="text-2xl font-bold text-[#2d2a26] dark:text-[#fdfcf8]">{daysRemaining}</p>
+                                                <p className="text-xs text-[#a8a29e]">days left</p>
                                             </div>
                                         </div>
-                                        <div className="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                        <div className="h-2 w-full bg-[#e5e5e5] dark:bg-white/10 rounded-full overflow-hidden">
                                             <div
-                                                className={`h-full rounded-full ${daysRemaining < 7 ? 'bg-red-500' : 'bg-green-500'}`}
+                                                className={`h-full rounded-full ${daysRemaining < 7 ? 'bg-[#bc8a5f]' : 'bg-[#ccd5ae]'}`}
                                                 style={{ width: `${Math.max(5, Math.min(100, (daysRemaining / 30) * 100))}%` }}
                                             ></div>
                                         </div>
@@ -89,23 +89,23 @@ export default function ClientTable({
 
                         <div className="space-y-4">
                             <div className="flex justify-between items-center p-3 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/5">
-                                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Maintenance Mode</span>
+                                <span className="text-sm font-medium text-[#57534e] dark:text-[#d6d3d1]">Maintenance Mode</span>
                                 <MaintenanceToggle client={client} />
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <span className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Access</span>
+                                <span className="text-xs font-medium text-[#a8a29e] uppercase tracking-wider ml-1">Access</span>
                                 <div className="grid grid-cols-2 gap-3">
                                     <button
                                         onClick={() => copyToClipboard(client.apiKey, 'API Key Copied!')}
-                                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium bg-stone-100 dark:bg-white/5 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-white/10 transition-colors"
+                                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium bg-[#f5f5f4] dark:bg-white/5 text-[#57534e] dark:text-[#d6d3d1] hover:bg-[#e7e5e4] dark:hover:bg-white/10 transition-colors"
                                     >
                                         <KeyIcon className="w-3.5 h-3.5" />
                                         Copy API Key
                                     </button>
                                     <button
                                         onClick={() => copyToClipboard(`${window.location.origin}/api/authorize?clientId=${client.id}`, 'Link Copied!')}
-                                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium bg-blue-50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-colors"
+                                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium bg-[#d4a373]/10 text-[#d4a373] hover:bg-[#d4a373]/20 transition-colors"
                                     >
                                         <LinkIcon className="w-3.5 h-3.5" />
                                         Copy Link
@@ -122,9 +122,9 @@ export default function ClientTable({
             </div>
 
             {/* Desktop View (Table) */}
-            <div className="hidden md:block overflow-hidden rounded-3xl border border-white/40 dark:border-white/5 bg-white/40 dark:bg-stone-900/40 backdrop-blur-md shadow-sm">
-                <table className="min-w-full text-gray-900 dark:text-gray-100">
-                    <thead className="bg-white/50 dark:bg-white/5 border-b border-white/20 dark:border-white/5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <div className="hidden md:block overflow-hidden rounded-3xl border border-[#e5e5e5] dark:border-white/5 bg-white/40 dark:bg-[#1c1917]/40 backdrop-blur-md shadow-sm">
+                <table className="min-w-full text-[#2d2a26] dark:text-[#fdfcf8]">
+                    <thead className="bg-white/50 dark:bg-white/5 border-b border-[#e5e5e5] dark:border-white/5 text-left text-xs font-semibold text-[#a8a29e] uppercase tracking-wider">
                         <tr>
                             <th scope="col" className="px-8 py-5">Client</th>
                             <th scope="col" className="px-6 py-5">Plan</th>
@@ -136,17 +136,17 @@ export default function ClientTable({
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/20 dark:divide-white/5">
+                    <tbody className="divide-y divide-[#e5e5e5] dark:divide-white/5">
                         {clients?.map((client) => (
-                            <tr key={client.id} className="group hover:bg-white/40 dark:hover:bg-white/5 transition-colors">
+                            <tr key={client.id} className="group hover:bg-[#d4a373]/5 dark:hover:bg-white/5 transition-colors">
                                 <td className="px-8 py-5 whitespace-nowrap">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 flex-shrink-0 rounded-xl bg-gradient-to-br from-orange-100 to-amber-100 dark:from-stone-700 dark:to-stone-600 flex items-center justify-center text-orange-900 dark:text-orange-100 font-bold text-sm shadow-sm group-hover:scale-110 transition-transform">
+                                        <div className="h-10 w-10 flex-shrink-0 rounded-xl bg-gradient-to-br from-[#d4a373] to-[#bc8a5f] flex items-center justify-center text-[#fdfcf8] font-bold text-sm shadow-sm group-hover:scale-110 transition-transform">
                                             {getInitials(client.name)}
                                         </div>
                                         <div>
-                                            <div className="font-semibold text-gray-900 dark:text-white">{client.name}</div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">{client.domain}</div>
+                                            <div className="font-semibold text-[#2d2a26] dark:text-[#fdfcf8]">{client.name}</div>
+                                            <div className="text-xs text-[#78716c] dark:text-[#a8a29e]">{client.domain}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -155,10 +155,10 @@ export default function ClientTable({
                                         const { daysRemaining } = calculateRenewal(client.startDate, client.billingCycle, client.billingStatus, client.billingPeriod);
                                         return (
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-medium text-gray-900 dark:text-white">{client.plan}</span>
-                                                <span className="text-xs text-gray-500 flex items-center gap-1">
+                                                <span className="text-sm font-medium text-[#2d2a26] dark:text-[#fdfcf8]">{client.plan}</span>
+                                                <span className="text-xs text-[#a8a29e] flex items-center gap-1">
                                                     {daysRemaining} days left
-                                                    <div className={`h-1.5 w-1.5 rounded-full ${daysRemaining < 7 ? 'bg-red-500' : 'bg-green-500'}`}></div>
+                                                    <div className={`h-1.5 w-1.5 rounded-full ${daysRemaining < 7 ? 'bg-[#bc8a5f]' : 'bg-[#ccd5ae]'}`}></div>
                                                 </span>
                                             </div>
                                         );
@@ -174,14 +174,14 @@ export default function ClientTable({
                                     <div className="flex gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => copyToClipboard(client.apiKey, 'API Key Copied!')}
-                                            className="p-2 rounded-lg bg-white dark:bg-black/20 text-gray-500 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-all border border-transparent hover:border-orange-100 dark:hover:border-orange-900/30 shadow-sm"
+                                            className="p-2 rounded-lg bg-white dark:bg-black/20 text-[#a8a29e] hover:text-[#d4a373] hover:bg-[#d4a373]/10 transition-all border border-transparent hover:border-[#d4a373]/20 shadow-sm"
                                             title="Copy API Key"
                                         >
                                             <KeyIcon className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={() => copyToClipboard(`${window.location.origin}/api/authorize?clientId=${client.id}`, 'Auth URL Copied!')}
-                                            className="p-2 rounded-lg bg-white dark:bg-black/20 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all border border-transparent hover:border-blue-100 dark:hover:border-blue-900/30 shadow-sm"
+                                            className="p-2 rounded-lg bg-white dark:bg-black/20 text-[#a8a29e] hover:text-[#d4a373] hover:bg-[#d4a373]/10 transition-all border border-transparent hover:border-[#d4a373]/20 shadow-sm"
                                             title="Copy Link"
                                         >
                                             <LinkIcon className="w-4 h-4" />
@@ -202,21 +202,21 @@ export default function ClientTable({
 
 function Status({ status }: { status: string }) {
     const styles = {
-        PAID: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/20',
-        UNPAID: 'bg-stone-50 text-stone-600 ring-stone-500/10 dark:bg-stone-500/10 dark:text-stone-400 dark:ring-stone-500/20',
-        OVERDUE: 'bg-rose-50 text-rose-700 ring-rose-600/10 dark:bg-rose-500/10 dark:text-rose-400 dark:ring-rose-500/20'
+        PAID: 'bg-[#ccd5ae]/20 text-[#2d2a26] ring-[#ccd5ae] dark:bg-[#ccd5ae]/10 dark:text-[#ccd5ae] dark:ring-[#ccd5ae]/50',
+        UNPAID: 'bg-[#f5f5f4] text-[#57534e] ring-[#d6d3d1] dark:bg-white/5 dark:text-[#a8a29e] dark:ring-white/10',
+        OVERDUE: 'bg-[#bc8a5f]/10 text-[#bc8a5f] ring-[#bc8a5f] dark:bg-[#bc8a5f]/20 dark:text-[#bc8a5f] dark:ring-[#bc8a5f]/50'
     };
     const dotStyles = {
-        PAID: 'bg-emerald-500',
-        UNPAID: 'bg-stone-500',
-        OVERDUE: 'bg-rose-500'
+        PAID: 'fill-[#ccd5ae]',
+        UNPAID: 'fill-[#a8a29e]',
+        OVERDUE: 'fill-[#bc8a5f]'
     };
 
     const key = status as keyof typeof styles;
 
     return (
         <span className={`inline-flex items-center gap-x-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${styles[key]}`}>
-            <svg className={`h-1.5 w-1.5 fill-current ${dotStyles[key]}`} viewBox="0 0 6 6" aria-hidden="true">
+            <svg className={`h-1.5 w-1.5 ${dotStyles[key]}`} viewBox="0 0 6 6" aria-hidden="true">
                 <circle cx={3} cy={3} r={3} />
             </svg>
             {status.charAt(0) + status.slice(1).toLowerCase()}
@@ -229,7 +229,7 @@ function MaintenanceToggle({ client }: { client: any }) {
     return (
         <form action={toggleMaintenance.bind(null, client.id, isMaintenance)}>
             <button
-                className={`group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 ${isMaintenance ? 'bg-orange-500' : 'bg-stone-200 dark:bg-stone-700'}`}
+                className={`group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#d4a373] focus:ring-offset-2 ${isMaintenance ? 'bg-[#d4a373]' : 'bg-[#e5e5e5] dark:bg-stone-700'}`}
                 role="switch"
                 aria-checked={isMaintenance}
                 title={isMaintenance ? 'Turn Maintenance Off' : 'Turn Maintenance On'}
@@ -247,7 +247,7 @@ function MaintenanceToggle({ client }: { client: any }) {
 function DeleteButton({ id }: { id: string }) {
     return (
         <form action={deleteClient.bind(null, id)}>
-            <button className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20" title="Delete Client">
+            <button className="text-[#d6d3d1] hover:text-[#bc8a5f] transition-colors p-2 rounded-full hover:bg-[#bc8a5f]/10" title="Delete Client">
                 <span className="sr-only">Delete</span>
                 <TrashIcon className="w-5 h-5" />
             </button>

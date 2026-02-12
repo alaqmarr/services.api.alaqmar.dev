@@ -22,58 +22,60 @@ export default async function ErrorPage({
     }
 
     return (
-        <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-grid-pattern flex flex-col items-center">
-            <div className="w-full max-w-3xl">
+        <main className="min-h-screen bg-[#fdfcf8] py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center relative overflow-hidden">
+            {/* Background Blob */}
+            <div className="absolute top-0 left-1/2 -ml-64 -mt-24 w-96 h-96 bg-[#d4a373] rounded-full mix-blend-multiply filter blur-3xl opacity-5 pointer-events-none"></div>
+
+            <div className="w-full max-w-3xl relative z-10">
                 <div className="mb-8">
-                    <Link href="/docs" className="text-sm font-medium text-gray-500 hover:text-gray-900 flex items-center gap-2">
+                    <Link href="/docs" className="text-sm font-medium text-[#78716c] hover:text-[#d4a373] flex items-center gap-2 transition-colors">
                         ← Back to Documentation
                     </Link>
                 </div>
 
-                <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div className="border-b border-gray-100 bg-gray-50/50 px-8 py-6">
-                        <div className="flex items-center justify-between">
-                            <span className="font-mono text-sm text-gray-500">Error Code: {error.code}</span>
+                <div className="overflow-hidden rounded-3xl bg-white shadow-lg shadow-[#d4a373]/5 border border-[#e5e5e5]">
+                    <div className="border-b border-[#e5e5e5] bg-[#fdfcf8] px-8 py-8">
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="font-mono text-sm text-[#a8a29e] bg-white px-2 py-1 rounded border border-[#e5e5e5]">Error Code: {error.code}</span>
                             <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${error.httpStatus >= 500 ? 'bg-red-50 text-red-700 ring-red-600/10' :
-                                error.httpStatus >= 400 ? 'bg-yellow-50 text-yellow-800 ring-yellow-600/20' :
-                                    'bg-gray-50 text-gray-600 ring-gray-500/10'
+                                error.httpStatus >= 400 ? 'bg-[#bc8a5f]/10 text-[#bc8a5f] ring-[#bc8a5f]/20' :
+                                    'bg-[#f5f5f4] text-[#57534e] ring-[#d6d3d1]/50'
                                 }`}>
                                 HTTP {error.httpStatus}
                             </span>
                         </div>
-                        <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
+                        <h1 className="text-3xl font-bold tracking-tight text-[#2d2a26] font-sans">
                             {error.title}
                         </h1>
                     </div>
 
                     <div className="px-8 py-8">
-                        <div className="prose prose-blue max-w-none">
-                            <h3 className="text-lg font-semibold text-gray-900">Description</h3>
-                            <p className="text-gray-600 leading-relaxed">
+                        <div className="prose prose-stone max-w-none">
+                            <h3 className="text-lg font-bold text-[#2d2a26]">Description</h3>
+                            <p className="text-[#57534e] leading-relaxed">
                                 {error.description}
                             </p>
 
-                            <div className="mt-8 rounded-lg bg-blue-50/50 p-6 border border-blue-100">
-                                <h3 className="text-sm font-semibold text-blue-900 uppercase tracking-wide">Developer Message</h3>
-                                <p className="mt-2 font-mono text-sm text-blue-700">
+                            <div className="mt-8 rounded-2xl bg-[#fdfcf8] p-6 border border-[#d4a373]/20 shadow-sm">
+                                <h3 className="text-xs font-bold text-[#bc8a5f] uppercase tracking-wider mb-2">Developer Message</h3>
+                                <p className="font-mono text-sm text-[#78716c] break-all">
                                     {error.message}
                                 </p>
                             </div>
 
                             <div className="mt-8">
-                                <h3 className="text-lg font-semibold text-gray-900">How to Resolve</h3>
-                                <ul className="list-disc pl-5 mt-2 space-y-1 text-gray-600">
+                                <h3 className="text-lg font-bold text-[#2d2a26]">How to Resolve</h3>
+                                <ul className="list-disc pl-5 mt-2 space-y-2 text-[#57534e]">
                                     <li>{error.resolution}</li>
-                                    {/* General troubleshooting steps could go here */}
                                     <li>If the issue persists, check your network connection.</li>
-                                    <li>Contact Alaqmar Services support code: <span className="font-mono text-xs bg-gray-100 p-1 rounded">{code}</span></li>
+                                    <li>Contact Alaqmar Services support with code: <strong className="text-[#2d2a26]">{code}</strong></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="mt-8 text-center text-sm text-gray-500">
+                <div className="mt-8 text-center text-sm text-[#a8a29e]">
                     &copy; {new Date().getFullYear()} Alaqmar Services API Documentation
                 </div>
             </div>
