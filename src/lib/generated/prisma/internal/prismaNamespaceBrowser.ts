@@ -79,6 +79,10 @@ export const ClientScalarFieldEnum = {
   maintenanceMode: 'maintenanceMode',
   maintenanceMessage: 'maintenanceMessage',
   apiKey: 'apiKey',
+  plan: 'plan',
+  billingCycle: 'billingCycle',
+  billingPeriod: 'billingPeriod',
+  startDate: 'startDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

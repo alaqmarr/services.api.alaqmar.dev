@@ -20,7 +20,11 @@ model Client {
   billingStatus      BillingStatus @default(UNPAID)
   maintenanceMode    Boolean       @default(false)
   maintenanceMessage String?
-  apiKey             String        @unique @default(cuid()) // Simple API key for now
+  apiKey             String        @unique @default(cuid())
+  plan               String        @default("Standard")
+  billingCycle       String        @default("MONTHLY") // DAILY, WEEKLY, MONTHLY, YEARLY
+  billingPeriod      Int           @default(1) // Duration units (e.g. 13 Months)
+  startDate          DateTime      @default(now())
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
 }

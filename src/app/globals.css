@@ -1,64 +1,84 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Warm/Premium Light Mode */
+  --background: #fdfcf8; /* Warm White/Cream */
+  --foreground: #2d2a26; /* Soft Charcoal */
+  --primary: #d4a373; /* Muted Gold/Sand */
+  --secondary: #e6ccb2; /* Pale Sand */
+  --accent: #ccd5ae; /* Soft Sage (optional nature vibe) or keeps gold */
+  --card-bg: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-card-bg: var(--card-bg);
+  
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   
-  --animate-blob: blob 7s infinite;
-  --animate-fade-in-up: fadeInUp 0.5s ease-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-breathe: breathe 4s ease-in-out infinite;
   
-  @keyframes blob {
-    0% { transform: translate(0px, 0px) scale(1); }
-    33% { transform: translate(30px, -50px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
-    100% { transform: translate(0px, 0px) scale(1); }
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
   }
   
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.02); opacity: 1; }
   }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #09090b;
-    --foreground: #fafafa;
+    /* Deep Warm Dark Mode */
+    --background: #1c1917; /* Warm Black/Espresso */
+    --foreground: #e7e5e4; /* Warm Gray */
+    --card-bg: #292524; /* Darker Stone */
   }
   
   body {
-    background: radial-gradient(circle at 50% 0%, #1e1e24 0%, #09090b 70%);
+    /* Sophisticated Warm Glow Gradient */
+    background: radial-gradient(circle at 80% 0%, #44403c 0%, #1c1917 40%, #0c0a09 100%);
     min-height: 100vh;
   }
 }
 
-/* Custom Utilities */
-.bg-grid-pattern {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  /* Light mode gradient */
+   background: radial-gradient(circle at 10% 10%, #fef3c7 0%, #fdfcf8 20%, #fdfcf8 100%);
 }
 
-.dark .bg-grid-pattern {
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+/* Custom Utilities for "Crextio" Vibe */
+
+/* Glass Cards */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
+.dark .glass-panel {
+    background: rgba(41, 37, 36, 0.6); /* Warm dark glass */
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
+/* Rounded Bento Grid Styles */
+.bento-card {
+    border-radius: 24px; /* Highly rounded corners */
+}
+
+/* Soft Warm Glows */
+.warm-glow {
+    box-shadow: 0 20px 40px -10px rgba(212, 163, 115, 0.2);
 }

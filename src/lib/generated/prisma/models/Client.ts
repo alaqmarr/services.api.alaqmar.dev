@@ -20,8 +20,18 @@ export type ClientModel = runtime.Types.Result.DefaultSelection<Prisma.$ClientPa
 
 export type AggregateClient = {
   _count: ClientCountAggregateOutputType | null
+  _avg: ClientAvgAggregateOutputType | null
+  _sum: ClientSumAggregateOutputType | null
   _min: ClientMinAggregateOutputType | null
   _max: ClientMaxAggregateOutputType | null
+}
+
+export type ClientAvgAggregateOutputType = {
+  billingPeriod: number | null
+}
+
+export type ClientSumAggregateOutputType = {
+  billingPeriod: number | null
 }
 
 export type ClientMinAggregateOutputType = {
@@ -32,6 +42,10 @@ export type ClientMinAggregateOutputType = {
   maintenanceMode: boolean | null
   maintenanceMessage: string | null
   apiKey: string | null
+  plan: string | null
+  billingCycle: string | null
+  billingPeriod: number | null
+  startDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +58,10 @@ export type ClientMaxAggregateOutputType = {
   maintenanceMode: boolean | null
   maintenanceMessage: string | null
   apiKey: string | null
+  plan: string | null
+  billingCycle: string | null
+  billingPeriod: number | null
+  startDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,11 +74,23 @@ export type ClientCountAggregateOutputType = {
   maintenanceMode: number
   maintenanceMessage: number
   apiKey: number
+  plan: number
+  billingCycle: number
+  billingPeriod: number
+  startDate: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type ClientAvgAggregateInputType = {
+  billingPeriod?: true
+}
+
+export type ClientSumAggregateInputType = {
+  billingPeriod?: true
+}
 
 export type ClientMinAggregateInputType = {
   id?: true
@@ -70,6 +100,10 @@ export type ClientMinAggregateInputType = {
   maintenanceMode?: true
   maintenanceMessage?: true
   apiKey?: true
+  plan?: true
+  billingCycle?: true
+  billingPeriod?: true
+  startDate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +116,10 @@ export type ClientMaxAggregateInputType = {
   maintenanceMode?: true
   maintenanceMessage?: true
   apiKey?: true
+  plan?: true
+  billingCycle?: true
+  billingPeriod?: true
+  startDate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +132,10 @@ export type ClientCountAggregateInputType = {
   maintenanceMode?: true
   maintenanceMessage?: true
   apiKey?: true
+  plan?: true
+  billingCycle?: true
+  billingPeriod?: true
+  startDate?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -137,6 +179,18 @@ export type ClientAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ClientAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ClientSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ClientMinAggregateInputType
@@ -167,6 +221,8 @@ export type ClientGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: ClientCountAggregateInputType | true
+  _avg?: ClientAvgAggregateInputType
+  _sum?: ClientSumAggregateInputType
   _min?: ClientMinAggregateInputType
   _max?: ClientMaxAggregateInputType
 }
@@ -179,9 +235,15 @@ export type ClientGroupByOutputType = {
   maintenanceMode: boolean
   maintenanceMessage: string | null
   apiKey: string
+  plan: string
+  billingCycle: string
+  billingPeriod: number
+  startDate: Date
   createdAt: Date
   updatedAt: Date
   _count: ClientCountAggregateOutputType | null
+  _avg: ClientAvgAggregateOutputType | null
+  _sum: ClientSumAggregateOutputType | null
   _min: ClientMinAggregateOutputType | null
   _max: ClientMaxAggregateOutputType | null
 }
@@ -212,6 +274,10 @@ export type ClientWhereInput = {
   maintenanceMode?: Prisma.BoolFilter<"Client"> | boolean
   maintenanceMessage?: Prisma.StringNullableFilter<"Client"> | string | null
   apiKey?: Prisma.StringFilter<"Client"> | string
+  plan?: Prisma.StringFilter<"Client"> | string
+  billingCycle?: Prisma.StringFilter<"Client"> | string
+  billingPeriod?: Prisma.IntFilter<"Client"> | number
+  startDate?: Prisma.DateTimeFilter<"Client"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
 }
@@ -224,6 +290,10 @@ export type ClientOrderByWithRelationInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   apiKey?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
+  billingPeriod?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -239,6 +309,10 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   billingStatus?: Prisma.EnumBillingStatusFilter<"Client"> | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFilter<"Client"> | boolean
   maintenanceMessage?: Prisma.StringNullableFilter<"Client"> | string | null
+  plan?: Prisma.StringFilter<"Client"> | string
+  billingCycle?: Prisma.StringFilter<"Client"> | string
+  billingPeriod?: Prisma.IntFilter<"Client"> | number
+  startDate?: Prisma.DateTimeFilter<"Client"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
 }, "id" | "domain" | "apiKey">
@@ -251,11 +325,17 @@ export type ClientOrderByWithAggregationInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   apiKey?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
+  billingPeriod?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ClientCountOrderByAggregateInput
+  _avg?: Prisma.ClientAvgOrderByAggregateInput
   _max?: Prisma.ClientMaxOrderByAggregateInput
   _min?: Prisma.ClientMinOrderByAggregateInput
+  _sum?: Prisma.ClientSumOrderByAggregateInput
 }
 
 export type ClientScalarWhereWithAggregatesInput = {
@@ -269,6 +349,10 @@ export type ClientScalarWhereWithAggregatesInput = {
   maintenanceMode?: Prisma.BoolWithAggregatesFilter<"Client"> | boolean
   maintenanceMessage?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   apiKey?: Prisma.StringWithAggregatesFilter<"Client"> | string
+  plan?: Prisma.StringWithAggregatesFilter<"Client"> | string
+  billingCycle?: Prisma.StringWithAggregatesFilter<"Client"> | string
+  billingPeriod?: Prisma.IntWithAggregatesFilter<"Client"> | number
+  startDate?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
 }
@@ -281,6 +365,10 @@ export type ClientCreateInput = {
   maintenanceMode?: boolean
   maintenanceMessage?: string | null
   apiKey?: string
+  plan?: string
+  billingCycle?: string
+  billingPeriod?: number
+  startDate?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -293,6 +381,10 @@ export type ClientUncheckedCreateInput = {
   maintenanceMode?: boolean
   maintenanceMessage?: string | null
   apiKey?: string
+  plan?: string
+  billingCycle?: string
+  billingPeriod?: number
+  startDate?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -305,6 +397,10 @@ export type ClientUpdateInput = {
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -317,6 +413,10 @@ export type ClientUncheckedUpdateInput = {
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -329,6 +429,10 @@ export type ClientCreateManyInput = {
   maintenanceMode?: boolean
   maintenanceMessage?: string | null
   apiKey?: string
+  plan?: string
+  billingCycle?: string
+  billingPeriod?: number
+  startDate?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -341,6 +445,10 @@ export type ClientUpdateManyMutationInput = {
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -353,6 +461,10 @@ export type ClientUncheckedUpdateManyInput = {
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -365,8 +477,16 @@ export type ClientCountOrderByAggregateInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
+  billingPeriod?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ClientAvgOrderByAggregateInput = {
+  billingPeriod?: Prisma.SortOrder
 }
 
 export type ClientMaxOrderByAggregateInput = {
@@ -377,6 +497,10 @@ export type ClientMaxOrderByAggregateInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
+  billingPeriod?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -389,8 +513,16 @@ export type ClientMinOrderByAggregateInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
+  billingPeriod?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ClientSumOrderByAggregateInput = {
+  billingPeriod?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -409,6 +541,14 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
@@ -423,6 +563,10 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   maintenanceMode?: boolean
   maintenanceMessage?: boolean
   apiKey?: boolean
+  plan?: boolean
+  billingCycle?: boolean
+  billingPeriod?: boolean
+  startDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["client"]>
@@ -435,6 +579,10 @@ export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   maintenanceMode?: boolean
   maintenanceMessage?: boolean
   apiKey?: boolean
+  plan?: boolean
+  billingCycle?: boolean
+  billingPeriod?: boolean
+  startDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["client"]>
@@ -447,6 +595,10 @@ export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   maintenanceMode?: boolean
   maintenanceMessage?: boolean
   apiKey?: boolean
+  plan?: boolean
+  billingCycle?: boolean
+  billingPeriod?: boolean
+  startDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["client"]>
@@ -459,11 +611,15 @@ export type ClientSelectScalar = {
   maintenanceMode?: boolean
   maintenanceMessage?: boolean
   apiKey?: boolean
+  plan?: boolean
+  billingCycle?: boolean
+  billingPeriod?: boolean
+  startDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "billingStatus" | "maintenanceMode" | "maintenanceMessage" | "apiKey" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "billingStatus" | "maintenanceMode" | "maintenanceMessage" | "apiKey" | "plan" | "billingCycle" | "billingPeriod" | "startDate" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
 
 export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Client"
@@ -476,6 +632,10 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     maintenanceMode: boolean
     maintenanceMessage: string | null
     apiKey: string
+    plan: string
+    billingCycle: string
+    billingPeriod: number
+    startDate: Date
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["client"]>
@@ -908,6 +1068,10 @@ export interface ClientFieldRefs {
   readonly maintenanceMode: Prisma.FieldRef<"Client", 'Boolean'>
   readonly maintenanceMessage: Prisma.FieldRef<"Client", 'String'>
   readonly apiKey: Prisma.FieldRef<"Client", 'String'>
+  readonly plan: Prisma.FieldRef<"Client", 'String'>
+  readonly billingCycle: Prisma.FieldRef<"Client", 'String'>
+  readonly billingPeriod: Prisma.FieldRef<"Client", 'Int'>
+  readonly startDate: Prisma.FieldRef<"Client", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Client", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Client", 'DateTime'>
 }

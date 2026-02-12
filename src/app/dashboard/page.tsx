@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { signOut } from '@/auth';
 import ClientTable from '@/app/ui/dashboard/client-table';
+import RevenueWidget from '@/app/ui/dashboard/revenue-widget';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,7 @@ export default async function DashboardPage() {
 
     return (
         <div className="w-full">
+            <RevenueWidget />
             <div className="flex w-full items-center justify-between mb-8">
                 <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
                 <Link

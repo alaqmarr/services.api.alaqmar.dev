@@ -176,6 +176,92 @@ export default function CreateForm() {
                     </div>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Plan Selection */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-3">Subscription Plan</label>
+                        <select
+                            name="plan"
+                            className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2.5 px-3"
+                        >
+                            <option value="Basic">Basic Plan</option>
+                            <option value="Standard">Standard Plan</option>
+                            <option value="Pro">Pro Plan</option>
+                            <option value="Enterprise">Enterprise</option>
+                        </select>
+                    </div>
+
+                    {/* Billing Cycle */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-3">Billing Cycle</label>
+                        <div className="flex gap-4 items-start">
+                            <div className="w-24 flex-shrink-0">
+                                <label className="sr-only" htmlFor="period">Duration</label>
+                                <div className="relative rounded-md shadow-sm">
+                                    <input
+                                        type="number"
+                                        name="billingPeriod"
+                                        id="period"
+                                        min="1"
+                                        defaultValue="1"
+                                        className="block w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-3 px-3 text-center font-semibold"
+                                        placeholder="1"
+                                    />
+                                    <div className="absolute inset-y-0 right-0 pr-1 flex items-center pointer-events-none">
+                                        <span className="text-gray-400 text-xs mr-1">x</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-grow grid grid-cols-4 gap-2">
+                                <LabelRadio
+                                    id="daily"
+                                    name="billingCycle"
+                                    value="DAILY"
+                                    label="Daily"
+                                    colorClass="peer-checked:border-purple-500 peer-checked:text-purple-600 peer-checked:bg-purple-50"
+                                />
+                                <LabelRadio
+                                    id="weekly"
+                                    name="billingCycle"
+                                    value="WEEKLY"
+                                    label="Weekly"
+                                    colorClass="peer-checked:border-pink-500 peer-checked:text-pink-600 peer-checked:bg-pink-50"
+                                />
+                                <LabelRadio
+                                    id="monthly"
+                                    name="billingCycle"
+                                    value="MONTHLY"
+                                    defaultChecked
+                                    label="Monthly"
+                                    colorClass="peer-checked:border-blue-500 peer-checked:text-blue-600 peer-checked:bg-blue-50"
+                                />
+                                <LabelRadio
+                                    id="yearly"
+                                    name="billingCycle"
+                                    value="YEARLY"
+                                    label="Yearly"
+                                    colorClass="peer-checked:border-indigo-500 peer-checked:text-indigo-600 peer-checked:bg-indigo-50"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Start Date */}
+                    <div className="md:col-span-2">
+                        <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
+                            Start Date
+                        </label>
+                        <input
+                            type="date"
+                            name="startDate"
+                            id="startDate"
+                            defaultValue={new Date().toISOString().split('T')[0]}
+                            className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2.5 px-3"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">Defaults to today if left blank.</p>
+                    </div>
+                </div>
+
                 <div aria-live="polite" aria-atomic="true">
                     {state.message && (
                         <p className="text-sm text-red-600 bg-red-50 p-3 rounded-md">{state.message}</p>

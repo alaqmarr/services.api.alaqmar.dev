@@ -47,6 +47,10 @@ const FormSchema = z.object({
   billingStatus: z.enum(["PAID", "UNPAID", "OVERDUE"]),
   maintenanceMode: z.boolean(),
   maintenanceMessage: z.string().optional(),
+  plan: z.string().optional(), // Defaults to Standard if empty
+  billingCycle: z.enum(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
+  billingPeriod: z.string().optional(), // Units, e.g. "13"
+  startDate: z.string().optional(), // Will be parsed to Date
 });
 
 const CreateClient = FormSchema.omit({
@@ -63,6 +67,10 @@ export async function createClient(
     name: formData.get("name"),
     domain: formData.get("domain"),
     billingStatus: formData.get("billingStatus"),
+    plan: formData.get("plan"),
+    billingCycle: formData.get("billingCycle"),
+    billingPeriod: formData.get("billingPeriod"),
+    startDate: formData.get("startDate"),
   });
 
   if (!validatedFields.success) {
@@ -72,7 +80,17 @@ export async function createClient(
     };
   }
 
-  const { name, domain, billingStatus } = validatedFields.data;
+  const {
+    name,
+    domain,
+    billingStatus,
+    plan,
+    billingCycle,
+    billingPeriod,
+    startDate,
+  } = validatedFields.data;
+  const start = startDate ? new Date(startDate) : new Date();
+  const period = billingPeriod ? parseInt(billingPeriod) : 1;
 
   try {
     const newClient = await prisma.client.create({
@@ -81,6 +99,10 @@ export async function createClient(
         domain,
         billingStatus,
         maintenanceMode: false,
+        plan: plan || "Standard",
+        billingCycle: billingCycle || "MONTHLY",
+        billingPeriod: period > 0 ? period : 1,
+        startDate: start,
       },
     });
     revalidatePath("/dashboard");
