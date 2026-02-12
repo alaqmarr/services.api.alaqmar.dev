@@ -17,7 +17,7 @@ export default function SideNav() {
             <div className="flex grow flex-col justify-between space-y-2">
                 <div className="space-y-2">
                     <div className="px-3 py-2">
-                        <h3 className="text-xs font-semibold text-[#bc8a5f] uppercase tracking-wider">Menu</h3>
+                        <h3 className="text-xs font-semibold text-primary uppercase tracking-wider">Menu</h3>
                     </div>
                     <NavLinks />
                 </div>
@@ -29,8 +29,8 @@ export default function SideNav() {
                         await signOut();
                     }}
                 >
-                    <button className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-sm font-medium text-[#78716c] dark:text-[#a8a29e] hover:bg-[#f5f5f4] dark:hover:bg-white/5 hover:text-[#2d2a26] dark:hover:text-[#fdfcf8] transition-all duration-200 group">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-transparent border border-[#e5e5e5] dark:border-white/10 group-hover:border-red-200 dark:group-hover:border-red-900/30 text-[#a8a29e] group-hover:text-red-500 transition-colors">
+                    <button className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-sm font-medium text-secondary hover:bg-card-bg hover:text-foreground transition-all duration-200 group">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-transparent border border-card-border group-hover:border-red-200 dark:group-hover:border-red-900/30 text-secondary group-hover:text-red-500 transition-colors">
                             <PowerIcon className="w-5" />
                         </div>
                         <div className="hidden md:block">Sign Out</div>
@@ -57,9 +57,9 @@ function NavLinks() {
                     <Link
                         key={link.name}
                         href={link.href}
-                        className="flex items-center gap-3 rounded-2xl p-3 text-sm font-medium text-[#57534e] dark:text-[#d6d3d1] hover:bg-[#d4a373]/10 dark:hover:bg-[#d4a373]/20 hover:text-[#d4a373] dark:hover:text-[#d4a373] transition-all duration-200 group"
+                        className="flex items-center gap-3 rounded-2xl p-3 text-sm font-medium text-secondary hover:bg-primary/10 hover:text-primary transition-all duration-200 group"
                     >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/60 dark:bg-white/5 shadow-sm group-hover:bg-[#d4a373]/20 transition-colors text-[#78716c] dark:text-[#d6d3d1] group-hover:text-[#d4a373]">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card-bg shadow-sm group-hover:bg-primary/20 transition-colors text-secondary group-hover:text-primary">
                             <LinkIcon className="w-5" />
                         </div>
                         <p className="hidden md:block">{link.name}</p>

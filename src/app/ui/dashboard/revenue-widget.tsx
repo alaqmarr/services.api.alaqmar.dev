@@ -85,24 +85,24 @@ export default async function RevenueWidget() {
 
             {/* Plans Distribution */}
             {/* Plans Distribution */}
-            <div className="md:col-span-3 rounded-3xl p-6 bg-[#fdfcf8] dark:bg-[#1c1917] border border-[#e5e5e5] dark:border-white/10 shadow-sm flex flex-col md:flex-row gap-6 items-center">
+            <div className="md:col-span-3 rounded-3xl p-6 bg-card-bg border border-card-border shadow-sm flex flex-col md:flex-row gap-6 items-center">
                 <div className="flex-1 w-full">
-                    <h3 className="text-[#a8a29e] text-xs font-medium uppercase tracking-wider mb-4">Active Subscriptions</h3>
+                    <h3 className="text-secondary text-xs font-medium uppercase tracking-wider mb-4">Active Subscriptions</h3>
                     <div className="flex gap-4">
                         {Object.entries(planCounts).map(([plan, count]) => (
-                            <div key={plan} className="flex-1 p-3 rounded-2xl bg-[#f5f5f4] dark:bg-black/20 border border-transparent hover:border-[#d4a373] text-center transition-all">
-                                <div className="text-xs text-[#78716c] mb-1">{plan}</div>
-                                <div className="text-xl font-bold text-[#2d2a26] dark:text-[#fdfcf8]">{count}</div>
+                            <div key={plan} className="flex-1 p-3 rounded-2xl bg-background border border-transparent hover:border-primary text-center transition-all">
+                                <div className="text-xs text-secondary mb-1">{plan}</div>
+                                <div className="text-xl font-bold text-foreground">{count}</div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                <div className="w-px h-12 bg-[#e5e5e5] dark:bg-white/10 hidden md:block"></div>
+                <div className="w-px h-12 bg-card-border hidden md:block"></div>
 
                 <div className="flex-none px-4 text-center">
-                    <div className="text-xs text-[#a8a29e] mb-1">Total Clients</div>
-                    <div className="text-3xl font-bold text-[#2d2a26] dark:text-[#fdfcf8]">{clients.length}</div>
+                    <div className="text-xs text-secondary mb-1">Total Clients</div>
+                    <div className="text-3xl font-bold text-foreground">{clients.length}</div>
                 </div>
             </div>
         </div>
