@@ -3,6 +3,7 @@
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -12,6 +13,8 @@ export type State = {
     name?: string[];
     domain?: string[];
     billingStatus?: string[];
+    email?: string[];
+    password?: string[];
   };
   message?: string | null;
   success?: boolean;
@@ -51,9 +54,11 @@ const CreateClient = FormSchema.omit({
   maintenanceMode: true,
   maintenanceMessage: true,
 });
-const UpdateClient = FormSchema.omit({ id: true }); // Simplified for now
 
-export async function createClient(prevState: any, formData: FormData) {
+export async function createClient(
+  prevState: State | undefined,
+  formData: FormData,
+): Promise<State> {
   const validatedFields = CreateClient.safeParse({
     name: formData.get("name"),
     domain: formData.get("domain"),
@@ -62,7 +67,7 @@ export async function createClient(prevState: any, formData: FormData) {
 
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors: validatedFields.error.flatten().fieldErrors as State["errors"],
       message: "Missing Fields. Failed to Create Client.",
     };
   }
@@ -70,7 +75,6 @@ export async function createClient(prevState: any, formData: FormData) {
   const { name, domain, billingStatus } = validatedFields.data;
 
   try {
-    // We need the created client to return it
     const newClient = await prisma.client.create({
       data: {
         name,
@@ -80,7 +84,11 @@ export async function createClient(prevState: any, formData: FormData) {
       },
     });
     revalidatePath("/dashboard");
-    return { success: true, client: newClient };
+    return {
+      success: true,
+      client: newClient,
+      message: "Client created successfully.",
+    };
   } catch (error) {
     return {
       message: "Database Error: Failed to Create Client.",
@@ -96,7 +104,7 @@ export async function toggleMaintenance(id: string, currentState: boolean) {
     });
     revalidatePath("/dashboard");
   } catch (error) {
-    return; // Don't return object to satisfy form action type
+    return;
   }
 }
 
@@ -107,6 +115,57 @@ export async function deleteClient(id: string) {
     });
     revalidatePath("/dashboard");
   } catch (error) {
-    return; // Don't return object to satisfy form action type
+    return;
   }
+}
+
+export async function setupAdmin(
+  prevState: State | undefined,
+  formData: FormData,
+): Promise<State> {
+  // 1. Check if any user exists
+  const userCount = await prisma.user.count();
+  if (userCount > 0) {
+    return {
+      message: "Setup is already complete. Please login.",
+      errors: {},
+    };
+  }
+
+  // 2. Validate form data
+  const validatedFields = z
+    .object({
+      email: z.string().email("Invalid email address"),
+      password: z.string().min(6, "Password must be at least 6 characters"),
+      name: z.string().optional(),
+    })
+    .safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors as State["errors"],
+      message: "Missing Fields. Failed to Create Admin.",
+    };
+  }
+
+  const { email, password, name } = validatedFields.data;
+
+  // 3. Create User
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name: name || "Admin",
+      },
+    });
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Create Admin.",
+    };
+  }
+
+  // 4. Redirect to login
+  redirect("/login");
 }

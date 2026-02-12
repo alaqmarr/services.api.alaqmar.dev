@@ -1,5 +1,4 @@
-'use client';
-
+import toast from 'react-hot-toast';
 import { deleteClient, toggleMaintenance } from '@/lib/actions';
 
 export default function ClientTable({
@@ -14,6 +13,11 @@ export default function ClientTable({
         apiKey: string;
     }>;
 }) {
+    const copyToClipboard = (text: string, message: string) => {
+        navigator.clipboard.writeText(text);
+        toast.success(message);
+    };
+
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
@@ -34,7 +38,7 @@ export default function ClientTable({
                                     Maintenance
                                 </th>
                                 <th scope="col" className="px-3 py-5 font-medium">
-                                    API Key
+                                    API Key & URL
                                 </th>
                                 <th scope="col" className="relative py-3 pl-6 pr-3">
                                     <span className="sr-only">Edit</span>
@@ -66,7 +70,24 @@ export default function ClientTable({
                                         </form>
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3 font-mono text-xs text-gray-500">
-                                        {client.apiKey}
+                                        <div className="flex flex-col gap-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="truncate max-w-[100px]" title={client.apiKey}>{client.apiKey}</span>
+                                                <button
+                                                    onClick={() => copyToClipboard(client.apiKey, 'API Key Copied!')}
+                                                    title="Copy API Key"
+                                                    className="text-gray-400 hover:text-blue-600"
+                                                >
+                                                    🔑
+                                                </button>
+                                            </div>
+                                            <button
+                                                onClick={() => copyToClipboard(`${window.location.origin}/api/authorize?clientId=${client.id}`, 'Auth URL Copied!')}
+                                                className="text-left text-blue-600 hover:underline"
+                                            >
+                                                Copy Auth URL
+                                            </button>
+                                        </div>
                                     </td>
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                         <div className="flex justify-end gap-3">
@@ -92,10 +113,10 @@ function Status({ status }: { status: string }) {
     return (
         <span
             className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${status === 'PAID'
-                    ? 'bg-green-500 text-white'
-                    : status === 'UNPAID'
-                        ? 'bg-gray-100 text-gray-500'
-                        : 'bg-red-500 text-white'
+                ? 'bg-green-500 text-white'
+                : status === 'UNPAID'
+                    ? 'bg-gray-100 text-gray-500'
+                    : 'bg-red-500 text-white'
                 }`}
         >
             {status}
