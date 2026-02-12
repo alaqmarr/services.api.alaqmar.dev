@@ -1,0 +1,44 @@
+{
+  "errors": [
+    {
+      "code": "AUTH_001",
+      "title": "Missing API Key",
+      "message": "x-api-key header is missing.",
+      "httpStatus": 401,
+      "description": "The request failed because the `x-api-key` header was not provided. Please ensure you are including your unique API key in the request headers.",
+      "resolution": "Add `x-api-key: YOUR_API_KEY` to your request headers."
+    },
+    {
+      "code": "AUTH_002",
+      "title": "Invalid API Key",
+      "message": "Invalid API Key provided.",
+      "httpStatus": 403,
+      "description": "The API key provided does not match any active client in our database.",
+      "resolution": "Check your API key for typos or generate a new one from the dashboard."
+    },
+    {
+      "code": "BILLING_001",
+      "title": "Unpaid Bills",
+      "message": "Service suspended due to unpaid bills.",
+      "httpStatus": 402,
+      "description": "Access to this service has been temporarily suspended because the associated account has outstanding unpaid bills.",
+      "resolution": "Please contact support or settle your invoices to restore access."
+    },
+    {
+      "code": "MAINTENANCE_001",
+      "title": "Maintenance Mode",
+      "message": "Service is currently under maintenance.",
+      "httpStatus": 503,
+      "description": "The system is currently undergoing scheduled maintenance.",
+      "resolution": "Please try again later. Check our status page for updates."
+    },
+    {
+      "code": "rate_limit_exceeded",
+      "title": "Rate Limit Exceeded",
+      "message": "Too many requests.",
+      "httpStatus": 429,
+      "description": "You have exceeded the allowed number of requests per minute.",
+      "resolution": "Reduce the frequency of your requests."
+    }
+  ]
+}

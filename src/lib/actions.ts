@@ -169,3 +169,45 @@ export async function setupAdmin(
   // 4. Redirect to login
   redirect("/login");
 }
+
+export async function createUser(
+  prevState: State | undefined,
+  formData: FormData,
+): Promise<State> {
+  const validatedFields = z
+    .object({
+      email: z.string().email("Invalid email address"),
+      password: z.string().min(6, "Password must be at least 6 characters"),
+      name: z.string().optional(),
+    })
+    .safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors as State["errors"],
+      message: "Missing Fields. Failed to Create User.",
+    };
+  }
+
+  const { email, password, name } = validatedFields.data;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name: name || "Admin",
+      },
+    });
+    revalidatePath("/dashboard");
+    return {
+      success: true,
+      message: "User created successfully.",
+    };
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Create User.",
+    };
+  }
+}
