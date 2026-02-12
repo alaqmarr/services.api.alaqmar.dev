@@ -1,34 +1,29 @@
 import Link from 'next/link';
-// We'll use simple customized SVG icons to avoid dependency issues for now, or use heroicons if installed. 
-// Assuming heroicons are not installed, I will use SVG paths directly.
 
 export default function SideNav() {
     return (
-        <div className="flex h-full flex-col px-3 py-4 md:px-2">
+        <div className="flex h-full flex-col px-3 py-4 md:px-2 border-r border-white/5 bg-white/5 backdrop-blur-xl">
             <Link
-                className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4 md:h-40"
+                className="mb-2 flex h-20 items-end justify-start rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 md:h-40 shadow-lg shadow-blue-900/20 group relative overflow-hidden"
                 href="/"
             >
-                <div className="w-32 text-white md:w-40">
-                    <h1 className="text-xl font-bold font-sans">Alaqmar Services</h1>
+                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="w-32 text-white md:w-40 relative z-10">
+                    <h1 className="text-xl font-bold font-sans tracking-tight">Alaqmar Services</h1>
                 </div>
             </Link>
             <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
                 <NavLinks />
-                <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
+                <div className="hidden h-auto w-full grow rounded-xl md:block"></div>
                 <form
                     action={async () => {
                         'use server';
-                        // re-import signOut dynamically if needed, or pass it as prop. 
-                        // Actually, importing server actions in client components (if this becomes one) is tricky.
-                        // But SideNav is a server component by default in App Router unless 'use client' is top.
-                        // We can import signOut.
                         const { signOut } = await import('@/auth');
                         await signOut();
                     }}
                 >
-                    <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-                        <PowerIcon className="w-6" />
+                    <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-xl bg-white/5 p-3 text-sm font-medium text-zinc-400 hover:bg-red-500/10 hover:text-red-400 md:flex-none md:justify-start md:p-2 md:px-3 transition-all duration-200 group">
+                        <PowerIcon className="w-5 group-hover:text-red-400 transition-colors" />
                         <div className="hidden md:block">Sign Out</div>
                     </button>
                 </form>
@@ -53,9 +48,9 @@ function NavLinks() {
                     <Link
                         key={link.name}
                         href={link.href}
-                        className="flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
+                        className="flex h-[48px] grow items-center justify-center gap-2 rounded-xl bg-transparent p-3 text-sm font-medium text-zinc-400 hover:bg-white/10 hover:text-zinc-100 md:flex-none md:justify-start md:p-2 md:px-3 transition-all duration-200 group"
                     >
-                        <LinkIcon className="w-6" />
+                        <LinkIcon className="w-5 group-hover:text-blue-400 transition-colors" />
                         <p className="hidden md:block">{link.name}</p>
                     </Link>
                 );
