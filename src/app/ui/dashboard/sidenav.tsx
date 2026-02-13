@@ -1,3 +1,4 @@
+import { ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 export default function SideNav() {
@@ -46,6 +47,7 @@ function NavLinks() {
         { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
         { name: 'Showcase', href: '/dashboard/showcase', icon: PresentationChartBarIcon },
         { name: 'Plans', href: '/dashboard/plans', icon: QueueListIcon },
+        { name: 'Logs', href: '/dashboard/logs', icon: ClipboardDocumentListIcon }, // Changed icon to ClipboardDocumentListIcon
         { name: 'Add Admin', href: '/dashboard/users/create', icon: UserPlusIcon },
         { name: 'Docs', href: '/docs', icon: DocumentTextIcon },
         { name: 'Setup', href: '/setup', icon: CogIcon },

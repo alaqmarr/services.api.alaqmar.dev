@@ -8,14 +8,22 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { BillingStatus, Prisma } from "@/lib/generated/prisma/client";
+import { logAction } from "@/lib/audit";
 
 export type State = {
   errors?: {
     name?: string[];
     domain?: string[];
     billingStatus?: string[];
+    planId?: string[];
+    billingCycle?: string[];
+    startDate?: string[];
+    billingPeriod?: string[];
+    domainProvider?: string[];
+    domainExpiry?: string[];
     email?: string[];
     password?: string[];
+    description?: string[];
   };
   message?: string | null;
   success?: boolean;
@@ -115,7 +123,7 @@ export async function createClient(
     const period = parseInt(billingPeriod || "1");
     // const renewalDate = calculateRenewal(new Date(startDate || new Date()), billingCycle as any || 'MONTHLY', period);
 
-    await prisma.client.create({
+    const client = await prisma.client.create({
       data: {
         name,
         domain,
@@ -130,6 +138,11 @@ export async function createClient(
         billingPeriod: period,
         startDate: startDate ? new Date(startDate) : new Date(),
       },
+    });
+
+    await logAction("CREATE_CLIENT", "Client", client.id, {
+      name: client.name,
+      domain: client.domain,
     });
   } catch (error) {
     return {
@@ -232,7 +245,7 @@ export async function addTransaction(
     const client = await prisma.client.findUnique({ where: { id: clientId } });
     if (!client) throw new Error("Client not found");
 
-    await prisma.$transaction([
+    const [transaction, updatedClient] = await prisma.$transaction([
       prisma.transaction.create({
         data: {
           clientId,
@@ -251,6 +264,12 @@ export async function addTransaction(
         },
       }),
     ]);
+
+    await logAction("ADD_TRANSACTION", "Transaction", transaction.id, {
+      clientId,
+      amount,
+      type,
+    });
 
     revalidatePath(`/dashboard/clients/${clientId}`);
     return { success: true, message: "Transaction added successfully." };
@@ -291,6 +310,11 @@ export async function renewClient(id: string) {
         billingStatus: "UNPAID",
         customPrice: client.renewalPrice, // Update current price to renewal price
       },
+    });
+
+    await logAction("CREATE_CLIENT", "Client", client.id, {
+      name: client.name,
+      domain: client.domain,
     });
 
     revalidatePath(`/dashboard/clients/${id}`);
