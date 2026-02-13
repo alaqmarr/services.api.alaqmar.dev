@@ -1,79 +1,68 @@
 
-import { prisma } from "@/lib/prisma";
-import { formatDistanceToNow } from "date-fns";
-import { UserIcon, ClockIcon, DocumentMagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { prisma } from '@/lib/prisma';
+import { formatDistanceToNow } from 'date-fns';
+import { Metadata } from 'next';
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+    title: 'Audit Logs | Alaqmar',
+};
 
-export default async function AuditLogPage() {
+export default async function LogsPage() {
     const logs = await prisma.auditLog.findMany({
         orderBy: { createdAt: 'desc' },
         take: 50,
     });
 
     return (
-        <div className="w-full">
-            <div className="flex w-full items-center justify-between mb-8">
-                <h1 className="text-2xl font-bold text-foreground">Audit Logs</h1>
+        <div className="w-full space-y-6">
+            <div>
+                <h1 className="text-2xl font-bold text-foreground tracking-tight">Audit Logs</h1>
+                <p className="text-sm text-secondary mt-1">Track system activity and changes.</p>
             </div>
 
-            <div className="bg-card-bg rounded-3xl border border-card-border shadow-sm overflow-hidden">
+            <div className="rounded-2xl bg-card-bg border border-card-border overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full text-left text-sm whitespace-nowrap">
-                        <thead className="uppercase tracking-wider border-b border-card-border bg-background/50">
+                    <table className="w-full text-left text-sm whitespace-nowrap">
+                        <thead className="bg-background/50 border-b border-card-border">
                             <tr>
-                                <th scope="col" className="px-6 py-4 font-semibold text-secondary">Action</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-secondary">Entity</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-secondary">User</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-secondary">Details</th>
-                                <th scope="col" className="px-6 py-4 font-semibold text-secondary">Time</th>
+                                <th className="px-6 py-3 text-xs font-medium text-secondary uppercase tracking-wider">Action</th>
+                                <th className="px-6 py-3 text-xs font-medium text-secondary uppercase tracking-wider">Entity</th>
+                                <th className="px-6 py-3 text-xs font-medium text-secondary uppercase tracking-wider">User</th>
+                                <th className="px-6 py-3 text-xs font-medium text-secondary uppercase tracking-wider">Time</th>
+                                <th className="px-6 py-3 text-xs font-medium text-secondary uppercase tracking-wider">Details</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-card-border">
-                            {logs.map((log) => {
-                                let detailsObject = {};
-                                try {
-                                    detailsObject = log.details ? JSON.parse(log.details) : {};
-                                } catch (e) {
-                                    detailsObject = { raw: log.details };
-                                }
-
-                                return (
+                            {logs.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5} className="px-6 py-12 text-center text-sm text-secondary">No logs found.</td>
+                                </tr>
+                            ) : (
+                                logs.map((log) => (
                                     <tr key={log.id} className="hover:bg-primary/5 transition-colors">
                                         <td className="px-6 py-4 font-medium text-foreground">
-                                            <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                {log.action}
-                                            </span>
+                                            {log.action}
                                         </td>
                                         <td className="px-6 py-4 text-secondary">
-                                            {log.entityType} <span className="text-xs text-secondary/70">({log.entityId?.slice(-5)})</span>
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary/10 text-secondary">
+                                                {log.entity}
+                                            </span>
+                                            {log.entityId && <span className="ml-1 text-xs text-secondary/50 font-mono">#{log.entityId.slice(0, 5)}</span>}
                                         </td>
-                                        <td className="px-6 py-4 text-secondary flex items-center gap-2">
-                                            <UserIcon className="w-4 h-4" />
-                                            {log.userId || "System"}
+                                        <td className="px-6 py-4 text-secondary text-xs">
+                                            {log.userId || 'system'}
                                         </td>
-                                        <td className="px-6 py-4 text-secondary max-w-xs truncate" title={JSON.stringify(detailsObject, null, 2)}>
-                                            {Object.entries(detailsObject).map(([key, value]) => (
-                                                <span key={key} className="mr-2 text-xs bg-background border border-card-border px-1.5 py-0.5 rounded">
-                                                    {key}: {JSON.stringify(value)}
-                                                </span>
-                                            )).slice(0, 3)}
-                                        </td>
-                                        <td className="px-6 py-4 text-secondary flex items-center gap-2">
-                                            <ClockIcon className="w-4 h-4" />
+                                        <td className="px-6 py-4 text-secondary text-xs">
                                             {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}
                                         </td>
+                                        <td className="px-6 py-4 text-secondary text-xs max-w-xs truncate font-mono">
+                                            {log.metadata ? JSON.stringify(log.metadata) : '-'}
+                                        </td>
                                     </tr>
-                                );
-                            })}
+                                ))
+                            )}
                         </tbody>
                     </table>
-                    {logs.length === 0 && (
-                        <div className="p-12 text-center text-secondary">
-                            <DocumentMagnifyingGlassIcon className="w-12 h-12 mx-auto mb-4 text-secondary/50" />
-                            <p>No audit logs found.</p>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>

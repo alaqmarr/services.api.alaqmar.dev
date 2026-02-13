@@ -9,80 +9,66 @@ export const metadata: Metadata = {
 
 export default async function ShowcasePage() {
     const projects = await prisma.showcase.findMany({
-        orderBy: { createdAt: 'desc' },
+        orderBy: { sortOrder: 'asc' },
     });
 
     return (
         <div className="w-full space-y-8">
-            <h1 className="text-3xl font-bold text-foreground">Showcase Portfolio</h1>
-            <p className="text-secondary max-w-2xl">Manage the projects displayed on your portfolio website.</p>
+            <div>
+                <h1 className="text-2xl font-bold text-foreground tracking-tight">Showcase</h1>
+                <p className="text-sm text-secondary mt-1">Manage your portfolio projects.</p>
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* List Projects */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="grid grid-cols-1 gap-6">
-                        {projects.map((project) => (
-                            <div key={project.id} className="bg-card-bg rounded-3xl p-6 border border-card-border shadow-sm flex flex-col md:flex-row gap-6 group hover:border-primary/30 transition-all duration-200">
-                                {/* Image Preview */}
-                                <div className="w-full md:w-32 h-32 rounded-2xl bg-secondary/10 overflow-hidden flex-shrink-0">
-                                    {project.imageUrl ? (
-                                        <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-secondary/30 text-2xl">📷</div>
-                                    )}
-                                </div>
-
-                                <div className="flex-grow flex flex-col justify-between">
-                                    <div>
-                                        <div className="flex justify-between items-start">
-                                            <h3 className="text-xl font-bold text-foreground">{project.title}</h3>
-                                            <div className="flex gap-2">
-                                                {project.siteUrl && (
-                                                    <a href={project.siteUrl} target="_blank" rel="noopener noreferrer" className="text-xs bg-primary/10 text-primary px-2 py-1 rounded hover:bg-primary/20">Live ↗</a>
-                                                )}
-                                                {project.repoUrl && (
-                                                    <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded hover:bg-secondary/20">Code ↗</a>
-                                                )}
-                                            </div>
+                <div className="lg:col-span-2 space-y-4">
+                    {projects.map((project) => (
+                        <div key={project.id} className="rounded-2xl bg-card-bg border border-card-border p-5 flex flex-col sm:flex-row gap-5 group hover:border-primary/30 transition-all">
+                            <div className="w-full sm:w-28 h-28 rounded-xl bg-background overflow-hidden flex-shrink-0">
+                                {project.image ? (
+                                    <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-secondary/20 text-3xl">📷</div>
+                                )}
+                            </div>
+                            <div className="flex-grow flex flex-col justify-between min-w-0">
+                                <div>
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="min-w-0">
+                                            <h3 className="font-bold text-foreground truncate">{project.title}</h3>
+                                            {project.slug && <p className="text-xs text-secondary/50 font-mono mt-0.5">/{project.slug}</p>}
                                         </div>
-                                        <p className="text-secondary text-sm mt-2 line-clamp-2">
-                                            {project.description}
-                                        </p>
-                                        <div className="flex flex-wrap gap-2 mt-4">
-                                            {project.tags.map((tag, i) => (
-                                                <span key={i} className="text-[10px] uppercase font-bold tracking-wider text-secondary/70 bg-secondary/5 px-2 py-1 rounded">
-                                                    {tag}
-                                                </span>
-                                            ))}
+                                        <div className="flex gap-1.5 flex-shrink-0">
+                                            {project.isFeatured && (
+                                                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-500/10 px-2 py-0.5 rounded">★ Featured</span>
+                                            )}
+                                            {project.liveUrl && (
+                                                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded hover:bg-primary/20">Live ↗</a>
+                                            )}
                                         </div>
                                     </div>
-
-                                    <div className="flex justify-end mt-4 pt-4 border-t border-card-border">
-                                        <form action={async () => {
-                                            'use server';
-                                            await deleteProject(project.id);
-                                        }}>
-                                            <button className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors font-medium">
-                                                Delete Project
-                                            </button>
-                                        </form>
+                                    <p className="text-sm text-secondary mt-1.5 line-clamp-2">{project.description}</p>
+                                    <div className="flex flex-wrap gap-1.5 mt-3">
+                                        {project.tags.map((tag, i) => (
+                                            <span key={i} className="text-[10px] font-medium text-secondary/70 bg-secondary/5 px-2 py-0.5 rounded">{tag}</span>
+                                        ))}
                                     </div>
                                 </div>
+                                <div className="flex justify-end mt-3 pt-3 border-t border-card-border">
+                                    <form action={async () => { 'use server'; await deleteProject(project.id); }}>
+                                        <button className="text-xs text-red-500 hover:text-red-600 font-medium transition-colors">Delete</button>
+                                    </form>
+                                </div>
                             </div>
-                        ))}
-                        {projects.length === 0 && (
-                            <div className="text-center py-12 text-secondary bg-card-bg rounded-3xl border border-dashed border-card-border">
-                                No projects in showcase yet.
-                            </div>
-                        )}
-                    </div>
+                        </div>
+                    ))}
+                    {projects.length === 0 && (
+                        <div className="text-center py-12 text-sm text-secondary bg-card-bg rounded-2xl border border-dashed border-card-border">
+                            No projects yet. Add one from the form.
+                        </div>
+                    )}
                 </div>
-
-                {/* Create Form */}
                 <div className="lg:col-span-1">
-                    <div className="sticky top-6">
-                        <CreateProjectForm />
-                    </div>
+                    <div className="sticky top-6"><CreateProjectForm /></div>
                 </div>
             </div>
         </div>

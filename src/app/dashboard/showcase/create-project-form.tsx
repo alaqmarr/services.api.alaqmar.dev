@@ -21,106 +21,63 @@ export default function CreateProjectForm() {
     }, [state]);
 
     return (
-        <form id="create-project-form" action={dispatch} className="bg-card-bg rounded-3xl p-8 border border-card-border shadow-sm space-y-6">
+        <form id="create-project-form" action={dispatch} className="bg-card-bg rounded-2xl p-6 border border-card-border space-y-4">
             <div>
-                <h2 className="text-xl font-bold text-foreground">Add Project</h2>
-                <p className="text-sm text-secondary">Showcase a new project on your portfolio.</p>
+                <h2 className="text-sm font-bold text-foreground">Add Project</h2>
+                <p className="text-xs text-secondary mt-0.5">Showcase a new project.</p>
             </div>
 
-            <div className="space-y-4">
-                {/* Title */}
+            <div className="space-y-3">
                 <div>
-                    <label htmlFor="title" className="block text-xs font-semibold uppercase tracking-wider text-secondary mb-1.5">
-                        Title
-                    </label>
-                    <input
-                        id="title"
-                        name="title"
-                        type="text"
-                        placeholder="Project Name"
-                        className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-foreground placeholder:text-secondary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-200"
-                        required
-                    />
+                    <label htmlFor="title" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Title</label>
+                    <input id="title" name="title" type="text" placeholder="Project Name" required
+                        className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
                 </div>
 
-                {/* Description */}
                 <div>
-                    <label htmlFor="description" className="block text-xs font-semibold uppercase tracking-wider text-secondary mb-1.5">
-                        Description
-                    </label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        rows={3}
-                        placeholder="Brief description of the project..."
-                        className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-foreground placeholder:text-secondary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-200 resize-none"
-                        required
-                    />
+                    <label htmlFor="description" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Description</label>
+                    <textarea id="description" name="description" rows={2} placeholder="Brief description..." required
+                        className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none" />
                 </div>
 
-                {/* Image URL */}
                 <div>
-                    <label htmlFor="imageUrl" className="block text-xs font-semibold uppercase tracking-wider text-secondary mb-1.5">
-                        Image URL
-                    </label>
-                    <input
-                        id="imageUrl"
-                        name="imageUrl"
-                        type="text"
-                        placeholder="https://example.com/image.png"
-                        className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-foreground placeholder:text-secondary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-200"
-                    />
+                    <label htmlFor="longDescription" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Long Description</label>
+                    <textarea id="longDescription" name="longDescription" rows={3} placeholder="Detailed description (optional)..."
+                        className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none" />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                    {/* Site URL */}
+                <div>
+                    <label htmlFor="image" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Image URL</label>
+                    <input id="image" name="image" type="text" placeholder="https://example.com/image.png"
+                        className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
                     <div>
-                        <label htmlFor="siteUrl" className="block text-xs font-semibold uppercase tracking-wider text-secondary mb-1.5">
-                            Live URL
-                        </label>
-                        <input
-                            id="siteUrl"
-                            name="siteUrl"
-                            type="text"
-                            placeholder="https://mysite.com"
-                            className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-foreground placeholder:text-secondary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-200"
-                        />
+                        <label htmlFor="liveUrl" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Live URL</label>
+                        <input id="liveUrl" name="liveUrl" type="text" placeholder="https://..."
+                            className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
                     </div>
-
-                    {/* Repo URL */}
                     <div>
-                        <label htmlFor="repoUrl" className="block text-xs font-semibold uppercase tracking-wider text-secondary mb-1.5">
-                            Repo URL
-                        </label>
-                        <input
-                            id="repoUrl"
-                            name="repoUrl"
-                            type="text"
-                            placeholder="https://github.com/..."
-                            className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-foreground placeholder:text-secondary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-200"
-                        />
+                        <label htmlFor="repoUrl" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Repo URL</label>
+                        <input id="repoUrl" name="repoUrl" type="text" placeholder="https://github.com/..."
+                            className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
                     </div>
                 </div>
 
-                {/* Tags */}
                 <div>
-                    <label htmlFor="tags" className="block text-xs font-semibold uppercase tracking-wider text-secondary mb-1.5">
-                        Tags (Comma separated)
-                    </label>
-                    <input
-                        id="tags"
-                        name="tags"
-                        type="text"
-                        placeholder="React, Next.js, TypeScript"
-                        className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-foreground placeholder:text-secondary/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-200"
-                    />
+                    <label htmlFor="tags" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Tags (comma separated)</label>
+                    <input id="tags" name="tags" type="text" placeholder="React, Next.js, TypeScript"
+                        className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                </div>
+
+                <div className="flex items-center gap-2 bg-background p-3 rounded-lg border border-card-border/50">
+                    <input id="isFeatured" name="isFeatured" type="checkbox" className="h-4 w-4 rounded border-card-border text-primary focus:ring-primary/20" />
+                    <label htmlFor="isFeatured" className="text-sm text-foreground cursor-pointer select-none">Featured project</label>
                 </div>
             </div>
 
-            <button
-                type="submit"
-                className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white shadow-lg shadow-primary/20 hover:bg-primary-dark hover:shadow-primary/30 transition-all duration-200 active:scale-[0.98]"
-            >
+            <button type="submit" className="w-full rounded-lg bg-foreground px-4 py-2.5 text-sm font-bold text-background transition-all hover:opacity-90 active:scale-[0.98]">
                 Create Project
             </button>
         </form>

@@ -1,278 +1,190 @@
 'use client';
 
-import { updateClient, addTransaction, renewClient, State } from '@/lib/actions';
+import { updateClient, addTransaction, State } from '@/lib/actions';
+import { Plan } from '@/lib/generated/prisma/client';
 import { useFormState } from 'react-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { formatDistanceToNow } from 'date-fns';
 
-export default function ClientEditForm({ client, plans, transactions }: { client: any, plans: any[], transactions?: any[] }) {
+export default function ClientEditForm({
+    client,
+    transactions,
+    plans
+}: {
+    client: any,
+    transactions?: any[],
+    plans: Plan[]
+}) {
+    const updateClientWithId = updateClient.bind(null, client.id);
     const initialState: State = { message: null, errors: {} };
-    const [state, dispatch] = useFormState(updateClient.bind(null, client.id), initialState);
-    const [showTransactionForm, setShowTransactionForm] = useState(false);
-
-    // Live Financial Calculations
-    const [price, setPrice] = useState(Number(client.customPrice) || 0);
-    const [paid, setPaid] = useState(Number(client.amountPaid) || 0);
-    const dueAmount = price - paid;
+    // @ts-ignore
+    const [state, dispatch] = useFormState(updateClientWithId, initialState);
+    const [showTxForm, setShowTxForm] = useState(false);
 
     useEffect(() => {
-        setPrice(Number(client.customPrice) || 0);
-        setPaid(Number(client.amountPaid) || 0);
-    }, [client.customPrice, client.amountPaid]);
-
-    useEffect(() => {
-        if (state?.success) {
-            toast.success("Client details updated successfully!");
-        } else if (state?.message) {
+        if (state.success) {
+            toast.success(state.message || "Updated!");
+        } else if (state.message) {
             toast.error(state.message);
         }
     }, [state]);
 
-    const handleRenew = async () => {
-        if (!confirm("Are you sure you want to renew this client? This will forward the start date and reset the amount paid.")) return;
-        const result = await renewClient(client.id);
-        if (result.success) {
-            toast.success(result.message);
-        } else {
-            toast.error(result.message);
-        }
-    };
-
-    const ErrorMsg = ({ field }: { field: keyof NonNullable<State['errors']> }) => {
-        if (state?.errors?.[field]) {
-            return (
-                <p className="text-red-500 text-xs mt-1 font-medium">{state.errors[field]![0]}</p>
-            );
-        }
-        return null;
-    };
-
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Form Definition - Hidden */}
-            <form id="client-form" action={dispatch} className="hidden"></form>
-
-            {/* Main Info */}
-            <div className="lg:col-span-2 space-y-6">
-                <div className="space-y-6">
-                    <div className="bg-card-bg rounded-3xl p-8 border border-card-border shadow-sm">
-                        <h2 className="text-xl font-bold text-foreground mb-6">Client Details</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-secondary mb-2">Client Name</label>
-                                <input form="client-form" name="name" defaultValue={client.name} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
-                                <ErrorMsg field="name" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-secondary mb-2">Domain</label>
-                                <input form="client-form" name="domain" defaultValue={client.domain} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
-                                <ErrorMsg field="domain" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-secondary mb-2">Email</label>
-                                <input form="client-form" name="email" type="email" defaultValue={client.email || ''} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
-                                <ErrorMsg field="email" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-secondary mb-2">Plan</label>
-                                <select form="client-form" name="planId" defaultValue={client.planId || ""} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none">
-                                    <option value="">No Plan</option>
-                                    {plans.map(p => (
-                                        <option key={p.id} value={p.id}>{p.name} (Default: ₹{Number(p.price)})</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-secondary mb-2">Billing Status</label>
-                                <select form="client-form" name="billingStatus" defaultValue={client.billingStatus} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none">
-                                    <option value="UNPAID">Unpaid</option>
-                                    <option value="PAID">Paid</option>
-                                    <option value="OVERDUE">Overdue</option>
-                                </select>
-                                <ErrorMsg field="billingStatus" />
-                            </div>
-                        </div>
-
-                        <div className="mt-6 pt-6 border-t border-card-border">
-                            <h3 className="text-lg font-semibold text-foreground mb-4">Subscription Settings</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-2">Start Date</label>
-                                    <input form="client-form" type="date" name="startDate" defaultValue={client.startDate ? new Date(client.startDate).toISOString().split('T')[0] : ''} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-2">Billing Cycle</label>
-                                    <select form="client-form" name="billingCycle" defaultValue={client.billingCycle} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none">
-                                        <option value="MONTHLY">Monthly</option>
-                                        <option value="YEARLY">Yearly</option>
-                                        <option value="WEEKLY">Weekly</option>
-                                        <option value="DAILY">Daily</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-2">Duration (Multiplier)</label>
-                                    <input form="client-form" type="number" name="billingPeriod" defaultValue={client.billingPeriod} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Domain Management */}
-                        <div className="mt-6 pt-6 border-t border-card-border">
-                            <h3 className="text-lg font-semibold text-foreground mb-4">Domain Management</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-2">Provider</label>
-                                    <input form="client-form" name="domainProvider" placeholder="e.g. GoDaddy" defaultValue={client.domainProvider || ''} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-2">Bought At</label>
-                                    <input form="client-form" type="date" name="domainBoughtAt" defaultValue={client.domainBoughtAt ? new Date(client.domainBoughtAt).toISOString().split('T')[0] : ''} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-secondary mb-2">Expiry Date</label>
-                                    <input form="client-form" type="date" name="domainExpiry" defaultValue={client.domainExpiry ? new Date(client.domainExpiry).toISOString().split('T')[0] : ''} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-card-bg rounded-3xl p-8 border border-card-border shadow-sm">
-                        <h2 className="text-xl font-bold text-foreground mb-6">Payment Notes & Terms</h2>
-                        <textarea
-                            form="client-form"
-                            name="description"
-                            defaultValue={client.description || ""}
-                            placeholder="e.g. 50% Advance paid on Jan 1st, 50% due on Deployment..."
-                            className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none h-32 resize-none"
-                        />
-                    </div>
-                </div>
-                {/* Hidden Inputs to ensure state values are submitted if they differ from initial */}
-                {/* Actually name="" on controlled inputs handles submission. But we need to make sure 'price' and 'paid' are submitted. */}
-                {/* The inputs below in Financial Overview have name="customPrice" etc. */}
-
-
-                {/* Transaction History */}
-                <div className="bg-card-bg rounded-3xl p-8 border border-card-border shadow-sm">
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xl font-bold text-foreground">Transaction History</h2>
-                        <button
-                            type="button"
-                            onClick={() => setShowTransactionForm(!showTransactionForm)}
-                            className="bg-primary/10 text-primary px-4 py-2 rounded-xl text-sm font-semibold hover:bg-primary/20 transition-colors"
-                        >
-                            {showTransactionForm ? 'Cancel' : '+ Add Transaction'}
-                        </button>
-                    </div>
-
-                    {showTransactionForm && (
-                        <div className="mb-6 p-6 bg-background rounded-2xl border border-card-border animate-in slide-in-from-top-2">
-                            <TransactionForm clientId={client.id} onClose={() => setShowTransactionForm(false)} />
-                        </div>
-                    )}
-
-                    <div className="space-y-4">
-                        {transactions && transactions.length > 0 ? (
-                            transactions.map((tx: any) => (
-                                <div key={tx.id} className="flex justify-between items-center p-4 bg-background rounded-2xl border border-card-border">
-                                    <div>
-                                        <p className="font-semibold text-foreground">₹{Number(tx.amount).toFixed(2)}</p>
-                                        <p className="text-xs text-secondary">{new Date(tx.date).toLocaleDateString()} • {tx.type}</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-sm text-foreground">{tx.description || "No description"}</p>
-                                        <p className="text-xs text-secondary">{tx.method || "N/A"}</p>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-secondary text-sm text-center py-4">No transactions recorded yet.</p>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Financials Side Panel */}
-            <div className="space-y-6">
-                <div className="bg-card-bg rounded-3xl p-6 border border-card-border shadow-sm sticky top-6">
-                    <h2 className="text-lg font-bold text-foreground mb-4">Financial Overview</h2>
-
-                    <div className="space-y-4">
+        <div className="space-y-8">
+            <form action={dispatch} className="space-y-8">
+                {/* Basic Info */}
+                <div className="rounded-2xl bg-card-bg border border-card-border p-6">
+                    <h2 className="text-sm font-semibold text-foreground mb-5">Client Details</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label className="text-xs text-secondary uppercase tracking-wider block mb-1">Total Project Cost</label>
-                            <div className="relative">
-                                <span className="absolute left-4 top-3 text-secondary">₹</span>
-                                <input
-                                    form="client-form"
-                                    name="customPrice"
-                                    type="number"
-                                    step="0.01"
-                                    value={price}
-                                    onChange={(e) => setPrice(Number(e.target.value))}
-                                    className="w-full bg-background border border-card-border rounded-xl pl-8 pr-4 py-3 text-foreground font-bold focus:ring-2 focus:ring-primary/20 outline-none"
-                                />
-                            </div>
+                            <label htmlFor="name" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Name</label>
+                            <input
+                                id="name" name="name" type="text" defaultValue={client.name} required
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            />
                         </div>
 
                         <div>
-                            <label className="text-xs text-secondary uppercase tracking-wider block mb-1">Amount Paid (Total)</label>
-                            <div className="relative">
-                                <span className="absolute left-4 top-3 text-green-500">₹</span>
-                                <input
-                                    form="client-form"
-                                    name="amountPaid"
-                                    type="number"
-                                    step="0.01"
-                                    value={paid}
-                                    onChange={(e) => setPaid(Number(e.target.value))}
-                                    className="w-full bg-background border border-card-border rounded-xl pl-8 pr-4 py-3 text-foreground font-bold text-green-500 focus:ring-2 focus:ring-green-500/20 outline-none"
-                                />
-                            </div>
-                            <p className="text-xs text-secondary mt-1">Updates automatically via Transactions</p>
+                            <label htmlFor="email" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Email</label>
+                            <input
+                                id="email" name="email" type="email" defaultValue={client.email || ''}
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            />
                         </div>
 
-                        <div className="p-4 bg-background rounded-2xl border border-card-border">
-                            <label className="text-xs text-secondary uppercase tracking-wider block mb-1">Due Amount</label>
-                            <div className={`text-2xl font-bold ${dueAmount > 0 ? 'text-red-500' : 'text-green-500'}`}>
-                                ₹{dueAmount.toFixed(2)}
-                            </div>
-                            <p className="text-xs text-secondary mt-1">Calculated automatically</p>
-                        </div>
-
-                        <div className="pt-4 border-t border-card-border">
-                            <label className="text-xs text-secondary uppercase tracking-wider block mb-1">Renewal Price (Next Cycle)</label>
-                            <div className="relative">
-                                <span className="absolute left-4 top-3 text-secondary">₹</span>
-                                <input form="client-form" name="renewalPrice" type="number" step="0.01" defaultValue={Number(client.renewalPrice)} className="w-full bg-background border border-card-border rounded-xl pl-8 pr-4 py-3 text-foreground font-bold focus:ring-2 focus:ring-primary/20 outline-none" />
-                            </div>
-                            <p className="text-xs text-secondary mt-2">
-                                The amount to be charged when the current plan expires.
-                            </p>
+                        <div>
+                            <label htmlFor="domain" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Domain</label>
+                            <input
+                                id="domain" name="domain" type="text" defaultValue={client.domain || ''}
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            />
                         </div>
                     </div>
+                </div>
 
-                    {/* Main Save Button triggers the main form */}
-                    <button
-                        type="button"
-                        onClick={() => (document.getElementById('client-form') as HTMLFormElement)?.requestSubmit()}
-                        className="w-full mt-8 bg-foreground text-background font-bold py-4 rounded-xl hover:scale-[1.02] transition-transform shadow-lg shadow-foreground/10"
-                    >
+                {/* Plan & Billing */}
+                <div className="rounded-2xl bg-card-bg border border-card-border p-6">
+                    <h2 className="text-sm font-semibold text-foreground mb-5">Subscription & Billing</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label htmlFor="planId" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Plan</label>
+                            <select
+                                id="planId" name="planId" defaultValue={client.planId || ''}
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            >
+                                <option value="">Select a plan...</option>
+                                {plans.map((p) => (
+                                    <option key={p.id} value={p.id}>{p.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label htmlFor="billingStatus" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Status</label>
+                            <select
+                                id="billingStatus" name="billingStatus" defaultValue={client.billingStatus || 'UNPAID'}
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            >
+                                <option value="PAID">Paid</option>
+                                <option value="UNPAID">Unpaid</option>
+                                <option value="OVERDUE">Overdue</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label htmlFor="customPrice" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Custom Price</label>
+                            <input
+                                id="customPrice" name="customPrice" type="number" defaultValue={client.customPrice ? parseFloat(client.customPrice) : 0} step="0.01"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="renewalPrice" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Renewal Price</label>
+                            <input
+                                id="renewalPrice" name="renewalPrice" type="number" defaultValue={client.renewalPrice ? parseFloat(client.renewalPrice) : 0} step="0.01"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="billingCycle" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Billing Cycle</label>
+                            <select
+                                id="billingCycle" name="billingCycle" defaultValue={client.billingCycle || 'MONTHLY'}
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            >
+                                <option value="MONTHLY">Monthly</option>
+                                <option value="YEARLY">Yearly</option>
+                                <option value="DAILY">Daily</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Domain Details */}
+                <div className="rounded-2xl bg-card-bg border border-card-border p-6">
+                    <h2 className="text-sm font-semibold text-foreground mb-5">Domain Details</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label htmlFor="domainProvider" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Provider</label>
+                            <input
+                                id="domainProvider" name="domainProvider" type="text" defaultValue={client.domainProvider || ''}
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="domainExpiry" className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1.5">Expiry Date</label>
+                            <input
+                                id="domainExpiry" name="domainExpiry" type="date"
+                                defaultValue={client.domainExpiry ? new Date(client.domainExpiry).toISOString().split('T')[0] : ''}
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="pt-2">
+                    <button type="submit" className="rounded-xl bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-all hover:opacity-90 active:scale-[0.98]">
                         Save Changes
                     </button>
+                </div>
+            </form>
 
+            {/* Transactions */}
+            <div className="rounded-2xl bg-card-bg border border-card-border overflow-hidden">
+                <div className="px-6 py-4 border-b border-card-border flex items-center justify-between">
+                    <h2 className="text-sm font-semibold text-foreground">Transactions</h2>
                     <button
-                        type="button"
-                        onClick={handleRenew}
-                        className="w-full mt-4 bg-primary/10 text-primary font-bold py-3 rounded-xl hover:bg-primary/20 transition-colors"
+                        onClick={() => setShowTxForm(!showTxForm)}
+                        className="text-xs font-medium text-primary hover:text-primary-hover transition-colors"
                     >
-                        Renew Subscription
+                        {showTxForm ? 'Cancel' : '+ Add'}
                     </button>
+                </div>
 
-                    {state.message && (
-                        <div className="mt-4">
-                            <p className="text-center text-sm font-medium text-red-500 bg-red-50 p-2 rounded">{state.message}</p>
-                            {Object.keys(state.errors || {}).length > 0 && <p className="text-xs text-center text-red-400 mt-1">Check fields marked in red.</p>}
-                        </div>
+                {showTxForm && (
+                    <TransactionForm clientId={client.id} onClose={() => setShowTxForm(false)} />
+                )}
+
+                <div className="divide-y divide-card-border">
+                    {(!transactions || transactions.length === 0) ? (
+                        <div className="px-6 py-8 text-center text-sm text-secondary">No transactions yet.</div>
+                    ) : (
+                        transactions.map((tx) => (
+                            <div key={tx.id} className="px-6 py-3.5 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${tx.type === 'PAYMENT' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                                    <div>
+                                        <p className="text-sm font-medium text-foreground">₹{Number(tx.amount).toLocaleString()}</p>
+                                        <p className="text-xs text-secondary">{formatDistanceToNow(new Date(tx.createdAt), { addSuffix: true })}</p>
+                                    </div>
+                                </div>
+                                <span className={`text-xs font-medium px-2 py-0.5 rounded-full capitalize ${tx.type === 'PAYMENT' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}`}>
+                                    {tx.type}
+                                </span>
+                            </div>
+                        ))
                     )}
                 </div>
             </div>
@@ -281,52 +193,53 @@ export default function ClientEditForm({ client, plans, transactions }: { client
 }
 
 function TransactionForm({ clientId, onClose }: { clientId: string, onClose: () => void }) {
-    const [amount, setAmount] = useState('');
-    const [description, setDescription] = useState('');
-    const [type, setType] = useState('PAYMENT');
-    const [method, setMethod] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setLoading(true);
-        const res = await addTransaction(clientId, Number(amount), description, type as any, method);
-        setLoading(false);
-        if (res.success) {
-            toast.success(res.message);
+        const form = e.target as HTMLFormElement;
+        const amount = parseFloat((form.elements.namedItem('amount') as HTMLInputElement).value);
+        const type = (form.elements.namedItem('type') as HTMLSelectElement).value;
+
+        const result = await addTransaction(clientId, amount, type);
+
+        if (result.success) {
+            toast.success(result.message || 'Transaction added');
             onClose();
         } else {
-            toast.error(res.message);
+            toast.error(result.message || 'Failed');
         }
-    };
+        setLoading(false);
+    }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="px-6 py-4 border-b border-card-border bg-background/50 space-y-3">
+            <div className="grid grid-cols-2 gap-3">
                 <div>
-                    <label className="block text-xs font-medium text-secondary mb-1">Amount</label>
-                    <input required type="number" value={amount} onChange={e => setAmount(e.target.value)} className="w-full bg-background border border-card-border rounded-xl px-3 py-2" />
+                    <label className="block text-xs font-medium text-secondary mb-1">Amount (₹)</label>
+                    <input
+                        name="amount" type="number" step="0.01" required placeholder="0.00"
+                        className="w-full rounded-lg border border-card-border bg-card-bg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
                 </div>
                 <div>
                     <label className="block text-xs font-medium text-secondary mb-1">Type</label>
-                    <select value={type} onChange={e => setType(e.target.value)} className="w-full bg-background border border-card-border rounded-xl px-3 py-2">
+                    <select
+                        name="type" defaultValue="PAYMENT"
+                        className="w-full rounded-lg border border-card-border bg-card-bg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    >
                         <option value="PAYMENT">Payment</option>
                         <option value="ADJUSTMENT">Adjustment</option>
                     </select>
                 </div>
             </div>
-            <div>
-                <label className="block text-xs font-medium text-secondary mb-1">Description</label>
-                <input required type="text" value={description} onChange={e => setDescription(e.target.value)} className="w-full bg-background border border-card-border rounded-xl px-3 py-2" />
-            </div>
-            <div>
-                <label className="block text-xs font-medium text-secondary mb-1">Method (UPI, Cash, etc)</label>
-                <input type="text" value={method} onChange={e => setMethod(e.target.value)} className="w-full bg-background border border-card-border rounded-xl px-3 py-2" />
-            </div>
-            <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-secondary hover:text-foreground">Cancel</button>
-                <button disabled={loading} type="submit" className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold">{loading ? 'Adding...' : 'Add Transaction'}</button>
-            </div>
+            <button
+                type="submit" disabled={loading}
+                className="rounded-lg bg-foreground px-4 py-2 text-xs font-semibold text-background transition-all hover:opacity-90 disabled:opacity-50"
+            >
+                {loading ? 'Adding...' : 'Add Transaction'}
+            </button>
         </form>
-    )
+    );
 }

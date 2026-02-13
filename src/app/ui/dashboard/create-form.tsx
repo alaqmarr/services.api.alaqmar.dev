@@ -1,380 +1,260 @@
 'use client';
 
 import { createClient, State } from '@/lib/actions';
+import { Plan } from '@/lib/generated/prisma/client';
 import Link from 'next/link';
 import { useFormState } from 'react-dom';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
-export default function CreateForm({ plans }: { plans?: any[] }) {
+export default function CreateForm({ plans }: { plans: Plan[] }) {
     const initialState: State = { message: null, errors: {} };
+    // @ts-ignore
     const [state, dispatch] = useFormState(createClient, initialState);
 
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [selectedPlanId, setSelectedPlanId] = useState<string>("");
-    const [customPrice, setCustomPrice] = useState<string>("");
-    const [amountPaid, setAmountPaid] = useState<string>("");
-
-    // Auto-fill price when plan changes
     useEffect(() => {
-        if (selectedPlanId && plans) {
-            const plan = plans.find(p => p.id === selectedPlanId);
-            if (plan) {
-                setCustomPrice(plan.price.toString());
-            }
-        }
-    }, [selectedPlanId, plans]);
-
-    useEffect(() => {
-        if (state?.success && state.client) {
-            setShowSuccess(true);
-            toast.success("Client created successfully!");
+        if (state.success) {
+            toast.success(state.message || "Client created!");
+        } else if (state.message) {
+            toast.error(state.message);
         }
     }, [state]);
 
-    const dueAmount = (parseFloat(customPrice || "0") - parseFloat(amountPaid || "0")).toFixed(2);
-
-    if (showSuccess && state.client) {
-        const authUrl = `${window.location.origin}/api/authorize?clientId=${state.client.id}`;
-        return (
-            <div className="rounded-xl bg-card-bg p-8 shadow-sm border border-primary ring-1 ring-primary/20">
-                <div className="text-center mb-8">
-                    <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-primary/20 mb-4 ring-1 ring-primary">
-                        <svg className="h-8 w-8 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <h3 className="text-xl font-bold text-foreground">Client Created!</h3>
-                    <p className="mt-2 text-sm text-secondary max-w-sm mx-auto">
-                        The client has been successfully added to the database. Save these credentials now.
-                        <span className="block text-primary font-medium mt-1 text-xs uppercase tracking-wide">⚠️ Credentials shown only once</span>
-                    </p>
-                </div>
-
-                <div className="space-y-6 bg-background p-6 rounded-lg border border-card-border">
-                    <div>
-                        <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Client Name</label>
-                        <div className="text-base font-medium text-foreground">{state.client.name}</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">API Key</label>
-                        <div className="flex rounded-md shadow-sm">
-                            <input
-                                readOnly
-                                value={state.client.apiKey}
-                                className="flex-1 block w-full rounded-none rounded-l-md border-card-border bg-card-bg p-2.5 text-sm text-foreground font-mono focus:ring-primary focus:border-primary"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => { navigator.clipboard.writeText(state.client.apiKey); toast.success("Copied!"); }}
-                                className="relative -ml-px inline-flex items-center space-x-2 px-4 py-2 border border-card-border text-sm font-medium rounded-r-md text-secondary bg-background hover:bg-card-bg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
-                            >
-                                Copy
-                            </button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-1">Auth URL</label>
-                        <div className="flex rounded-md shadow-sm">
-                            <input
-                                readOnly
-                                value={authUrl}
-                                className="flex-1 block w-full rounded-none rounded-l-md border-card-border bg-card-bg p-2.5 text-sm text-secondary focus:ring-primary focus:border-primary"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => { navigator.clipboard.writeText(authUrl); toast.success("Copied!"); }}
-                                className="relative -ml-px inline-flex items-center space-x-2 px-4 py-2 border border-card-border text-sm font-medium rounded-r-md text-secondary bg-background hover:bg-card-bg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
-                            >
-                                Copy
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mt-8">
-                    <Link
-                        href="/dashboard"
-                        className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-background bg-foreground hover:bg-black dark:hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-foreground transition-colors"
-                    >
-                        Back to Dashboard
-                    </Link>
-                </div>
-            </div>
-        );
-    }
-
     return (
-        <form action={dispatch} className="bg-card-bg rounded-xl shadow-sm border border-card-border p-8">
-            <div className="space-y-6">
-                {/* Name */}
-                <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-foreground mb-1">
-                        Client Name
-                    </label>
-                    <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="e.g. Acme Corp"
-                        className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3 uppercase tracking-tight placeholder-secondary"
-                        aria-describedby="name-error"
-                        required
-                    />
-                    <div id="name-error" aria-live="polite" aria-atomic="true">
-                        {state.errors?.name &&
-                            state.errors.name.map((error: string) => (
-                                <p key={error} className="mt-2 text-sm text-red-600">
-                                    {error}
-                                </p>
-                            ))}
-                    </div>
-                </div>
+        <div className="max-w-4xl mx-auto">
+            <div className="mb-8">
+                <Link href="/dashboard" className="text-sm text-secondary hover:text-primary transition-colors inline-flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                    Back
+                </Link>
+                <h1 className="text-2xl font-bold text-foreground mt-4 tracking-tight">New Client</h1>
+                <p className="text-sm text-secondary mt-1">Add a new client to your portfolio.</p>
+            </div>
 
-                {/* Email */}
-                <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
-                        Email Address
-                    </label>
-                    <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="client@company.com"
-                        className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3 placeholder-secondary"
-                        aria-describedby="email-error"
-                    />
-                    <div id="email-error" aria-live="polite" aria-atomic="true">
-                        {state.errors?.email &&
-                            state.errors.email.map((error: string) => (
-                                <p key={error} className="mt-2 text-sm text-red-600">
-                                    {error}
-                                </p>
-                            ))}
-                    </div>
-                </div>
-
-                {/* Domain */}
-                <div>
-                    <label htmlFor="domain" className="block text-sm font-medium text-foreground mb-1">
-                        Domain
-                    </label>
-                    <div className="relative rounded-md shadow-sm">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <span className="text-secondary sm:text-sm">https://</span>
-                        </div>
-                        <input
-                            type="text"
-                            name="domain"
-                            id="domain"
-                            className="block w-full rounded-lg border-card-border bg-background text-foreground pl-16 focus:border-primary focus:ring-primary sm:text-sm py-2.5 pr-3 placeholder-secondary"
-                            placeholder="www.example.com"
-                            aria-describedby="domain-error"
-                            required
-                        />
-                    </div>
-                    <div id="domain-error" aria-live="polite" aria-atomic="true">
-                        {state.errors?.domain &&
-                            state.errors.domain.map((error: string) => (
-                                <p key={error} className="mt-2 text-sm text-red-600">
-                                    {error}
-                                </p>
-                            ))}
-                    </div>
-                </div>
-
-                <div className="border-t border-card-border pt-6">
-                    <h3 className="text-lg font-bold text-foreground mb-4">Plan & Billing</h3>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        {/* Plan Selection */}
+            <form action={dispatch} className="space-y-8">
+                <div className="bg-card-bg border border-card-border rounded-xl p-6">
+                    <h2 className="text-lg font-semibold text-foreground mb-4">Basic Information</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Name */}
                         <div>
-                            <label className="block text-sm font-medium text-foreground mb-3">Subscription Plan</label>
+                            <label htmlFor="name" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Name <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                                id="name"
+                                name="name"
+                                type="text"
+                                placeholder="Client name"
+                                required
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
+                            />
+                            {state.errors?.name && <p className="text-xs text-red-500 mt-1">{state.errors.name[0]}</p>}
+                        </div>
+
+                        {/* Email */}
+                        <div>
+                            <label htmlFor="email" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Email
+                            </label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="client@example.com"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
+                            />
+                            {state.errors?.email && <p className="text-xs text-red-500 mt-1">{state.errors.email[0]}</p>}
+                        </div>
+
+                        {/* Company (removed from form as per schema revert? No, schema DOES NOT have company field anymore! User schema does NOT have company!) */}
+                        {/* Wait, my simplified schema had Company. User schema snippets:
+                           model Client {
+                             name, email, domain, billingStatus, maintenanceMode, maintenanceMessage, apiKey, planId, customPrice, amountPaid, renewalPrice, description, isBlocked, billingCycle, billingPeriod, startDate, domainExpiry, domainBoughtAt, domainProvider, transactions, createdAt, updatedAt
+                           }
+                           NO COMPANY FIELD!
+                           So I should REMOVE company field.
+                           And I should ADD domain field (required as per schema but let's make it optional in form if possible, but schema says @unique so it must be present? Schema: domain String @unique. It is REQUIRED.)
+                        */}
+                    </div>
+                </div>
+
+                <div className="bg-card-bg border border-card-border rounded-xl p-6">
+                    <h2 className="text-lg font-semibold text-foreground mb-4">Domain & Hosting</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Domain */}
+                        <div>
+                            <label htmlFor="domain" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Domain <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                                id="domain"
+                                name="domain"
+                                type="text"
+                                placeholder="example.com"
+                                required
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
+                            />
+                            {state.errors?.domain && <p className="text-xs text-red-500 mt-1">{state.errors.domain[0]}</p>}
+                        </div>
+
+                        {/* Domain Provider */}
+                        <div>
+                            <label htmlFor="domainProvider" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Provider
+                            </label>
+                            <input
+                                id="domainProvider"
+                                name="domainProvider"
+                                type="text"
+                                placeholder="GoDaddy, Hostinger..."
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
+                            />
+                        </div>
+
+                        {/* Bought At */}
+                        <div>
+                            <label htmlFor="domainBoughtAt" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Bought At
+                            </label>
+                            <input
+                                id="domainBoughtAt"
+                                name="domainBoughtAt"
+                                type="date"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
+                            />
+                        </div>
+
+                        {/* Expiry */}
+                        <div>
+                            <label htmlFor="domainExpiry" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Expiry Date
+                            </label>
+                            <input
+                                id="domainExpiry"
+                                name="domainExpiry"
+                                type="date"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-card-bg border border-card-border rounded-xl p-6">
+                    <h2 className="text-lg font-semibold text-foreground mb-4">Subscription & Billing</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Plan */}
+                        <div>
+                            <label htmlFor="planId" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Plan
+                            </label>
                             <select
+                                id="planId"
                                 name="planId"
-                                value={selectedPlanId}
-                                onChange={(e) => setSelectedPlanId(e.target.value)}
-                                className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm appearance-none"
                             >
-                                <option value="">Select a Plan</option>
-                                {plans?.map((plan) => (
+                                <option value="">Select a plan...</option>
+                                {plans.map((plan) => (
                                     <option key={plan.id} value={plan.id}>
-                                        {plan.name} - ₹{plan.price} / {plan.durationUnit}
+                                        {plan.name} - ₹{parseFloat(plan.price.toString())} ({plan.durationUnit})
                                     </option>
                                 ))}
                             </select>
                         </div>
 
-                        {/* Billing Cycle (Hidden if plan selected, or optional override) */}
+                        {/* Billing Status */}
                         <div>
-                            <label className="block text-sm font-medium text-foreground mb-3">Billing Cycle</label>
-                            <div className="flex gap-4 items-start">
-                                <div className="w-24 flex-shrink-0">
-                                    <div className="relative rounded-md shadow-sm">
-                                        <input
-                                            type="number"
-                                            name="billingPeriod"
-                                            id="period"
-                                            min="1"
-                                            defaultValue="1"
-                                            className="block w-full rounded-lg border-card-border bg-background text-foreground focus:border-primary focus:ring-primary sm:text-sm py-3 px-3 text-center font-semibold"
-                                            placeholder="1"
-                                        />
-                                        <div className="absolute inset-y-0 right-0 pr-1 flex items-center pointer-events-none">
-                                            <span className="text-secondary text-xs mr-1">x</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex-grow">
-                                    <select
-                                        name="billingCycle"
-                                        className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-3 px-3"
-                                        defaultValue="MONTHLY"
-                                    >
-                                        <option value="DAILY">Days</option>
-                                        <option value="WEEKLY">Weeks</option>
-                                        <option value="MONTHLY">Months</option>
-                                        <option value="YEARLY">Years</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 bg-background p-4 rounded-xl border border-card-border">
-                        {/* Total Cost */}
-                        <div>
-                            <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-2">Total Cost (₹)</label>
-                            <div className="relative rounded-md shadow-sm">
-                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <span className="text-foreground sm:text-sm">₹</span>
-                                </div>
-                                <input
-                                    type="number"
-                                    name="customPrice"
-                                    value={customPrice}
-                                    onChange={(e) => setCustomPrice(e.target.value)}
-                                    className="block w-full rounded-lg border-card-border bg-card-bg text-foreground pl-8 focus:border-primary focus:ring-primary sm:text-sm py-2.5 font-bold"
-                                    placeholder="0.00"
-                                    step="0.01"
-                                />
-                            </div>
+                            <label htmlFor="billingStatus" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Status
+                            </label>
+                            <select
+                                id="billingStatus"
+                                name="billingStatus"
+                                defaultValue="UNPAID"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm appearance-none"
+                            >
+                                <option value="PAID">Paid</option>
+                                <option value="UNPAID">Unpaid</option>
+                                <option value="OVERDUE">Overdue</option>
+                            </select>
                         </div>
 
-                        {/* Amount Paid */}
+                        {/* Custom Price */}
                         <div>
-                            <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-2">Amount Paid (₹)</label>
-                            <div className="relative rounded-md shadow-sm">
-                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <span className="text-green-600 sm:text-sm">₹</span>
-                                </div>
-                                <input
-                                    type="number"
-                                    name="amountPaid"
-                                    value={amountPaid}
-                                    onChange={(e) => setAmountPaid(e.target.value)}
-                                    className="block w-full rounded-lg border-card-border bg-card-bg text-foreground pl-8 focus:border-primary focus:ring-primary sm:text-sm py-2.5 font-bold"
-                                    placeholder="0.00"
-                                    step="0.01"
-                                />
-                            </div>
+                            <label htmlFor="customPrice" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Custom Price (₹)
+                            </label>
+                            <input
+                                id="customPrice"
+                                name="customPrice"
+                                type="number"
+                                placeholder="0.00"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
+                            />
                         </div>
 
-                        {/* Due Amount */}
-                        <div>
-                            <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-2">Due Amount</label>
-                            <div className={`text-xl font-bold py-2 ${parseFloat(dueAmount) > 0 ? 'text-red-500' : 'text-green-500'}`}>
-                                ₹ {dueAmount}
-                            </div>
-                            <input type="hidden" name="billingStatus" value={parseFloat(dueAmount) > 0 ? "UNPAID" : "PAID"} />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         {/* Renewal Price */}
                         <div>
-                            <label className="block text-sm font-medium text-foreground mb-1">Renewal Price (₹)</label>
+                            <label htmlFor="renewalPrice" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Renewal Price (₹)
+                            </label>
                             <input
-                                type="number"
+                                id="renewalPrice"
                                 name="renewalPrice"
-                                placeholder="Amount to be charged on renewal"
-                                className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
-                                step="0.01"
+                                type="number"
+                                placeholder="0.00"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
                             />
-                            <p className="text-xs text-secondary mt-1">Leave empty to use Plan default</p>
                         </div>
 
-                        {/* Description/Terms */}
+                        {/* Billing Cycle */}
                         <div>
-                            <label className="block text-sm font-medium text-foreground mb-1">Payment Terms / Notes</label>
-                            <textarea
-                                name="description"
-                                placeholder="e.g. 50% Advance, 50% on Deployment"
-                                className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3 h-[86px] resize-none"
+                            <label htmlFor="billingCycle" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Billing Cycle
+                            </label>
+                            <select
+                                id="billingCycle"
+                                name="billingCycle"
+                                defaultValue="MONTHLY"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm appearance-none"
+                            >
+                                <option value="MONTHLY">Monthly</option>
+                                <option value="YEARLY">Yearly</option>
+                                <option value="DAILY">Daily</option>
+                                <option value="WEEKLY">Weekly</option>
+                            </select>
+                        </div>
+
+                        {/* Subscription Period */}
+                        <div>
+                            <label htmlFor="subscriptionPeriod" className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">
+                                Period Length
+                            </label>
+                            <input
+                                id="subscriptionPeriod"
+                                name="subscriptionPeriod"
+                                type="number"
+                                defaultValue="1"
+                                className="w-full rounded-xl border border-card-border bg-background px-4 py-3 text-foreground placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all text-sm"
                             />
                         </div>
                     </div>
-
-                    {/* Start Date */}
-                    <div>
-                        <label htmlFor="startDate" className="block text-sm font-medium text-foreground mb-1">
-                            Start Date
-                        </label>
-                        <input
-                            type="date"
-                            name="startDate"
-                            id="startDate"
-                            defaultValue={new Date().toISOString().split('T')[0]}
-                            className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
-                        />
-                    </div>
                 </div>
 
-                <div aria-live="polite" aria-atomic="true">
-                    {state.message && (
-                        <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 p-3 rounded-md">{state.message}</p>
-                    )}
+                <div className="pt-4 flex gap-3">
+                    <button
+                        type="submit"
+                        className="flex-1 rounded-xl bg-foreground px-6 py-3 text-sm font-bold text-background shadow-sm transition-all hover:opacity-90 active:scale-[0.98]"
+                    >
+                        Create Client
+                    </button>
+                    <Link
+                        href="/dashboard"
+                        className="rounded-xl border border-card-border bg-card-bg px-6 py-3 text-sm font-medium text-secondary hover:text-foreground transition-colors text-center"
+                    >
+                        Cancel
+                    </Link>
                 </div>
-            </div>
-
-            <div className="mt-8 flex items-center justify-end gap-x-4">
-                <Link
-                    href="/dashboard"
-                    className="text-sm font-semibold leading-6 text-foreground hover:text-primary"
-                >
-                    Cancel
-                </Link>
-                <button
-                    type="submit"
-                    className="rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background shadow-sm hover:bg-black dark:hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground transition-all"
-                >
-                    Create Client
-                </button>
-            </div>
-        </form>
-    );
-}
-
-
-function LabelRadio({ id, name, value, label, defaultChecked, colorClass }: any) {
-    return (
-        <div>
-            <input
-                type="radio"
-                name={name}
-                id={id}
-                value={value}
-                className="peer sr-only"
-                defaultChecked={defaultChecked}
-            />
-            <label
-                htmlFor={id}
-                className={`flex items-center justify-center rounded-lg border border-card-border bg-background px-3 py-3 text-sm font-medium text-secondary hover:bg-card-bg hover:text-foreground peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 cursor-pointer transition-all ${colorClass}`}
-            >
-                {label}
-            </label>
+            </form>
         </div>
-    )
+    );
 }

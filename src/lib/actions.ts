@@ -7,24 +7,13 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { BillingStatus, Prisma } from "@/lib/generated/prisma/client";
+import { Prisma, BillingStatus } from "@/lib/generated/prisma/client";
 import { logAction } from "@/lib/audit";
 import { sendEmail } from "@/lib/email";
 
 export type State = {
   errors?: {
-    name?: string[];
-    domain?: string[];
-    billingStatus?: string[];
-    planId?: string[];
-    billingCycle?: string[];
-    startDate?: string[];
-    billingPeriod?: string[];
-    domainProvider?: string[];
-    domainExpiry?: string[];
-    email?: string[];
-    password?: string[];
-    description?: string[];
+    [key: string]: string[];
   };
   message?: string | null;
   success?: boolean;
@@ -50,40 +39,26 @@ export async function authenticate(
   }
 }
 
-const FormSchema = z.object({
+// --- Client Actions ---
+
+const ClientSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
-  domain: z.string().min(1, "Domain is required"),
   email: z.string().email("Invalid email address").optional().or(z.literal("")),
-  billingStatus: z
-    .enum(["PAID", "UNPAID", "OVERDUE"])
-    .optional()
-    .or(z.literal("")),
-  maintenanceMode: z.boolean(),
-  maintenanceMessage: z.string().optional(),
+  domain: z.string().optional().or(z.literal("")),
+  billingStatus: z.nativeEnum(BillingStatus).optional(),
   planId: z.string().optional(),
-  customPrice: z.string().optional(), // Decimal as string from form
-  amountPaid: z.string().optional(), // Decimal as string from form
+  billingCycle: z.string().optional(),
+  subscriptionPeriod: z.string().optional(),
+  customPrice: z.string().optional(),
   renewalPrice: z.string().optional(),
-  description: z.string().optional(),
-  billingCycle: z.enum(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"]).optional(),
-  billingPeriod: z.string().optional(), // Units, e.g. "13"
-  startDate: z.string().optional(), // Will be parsed to Date
   domainExpiry: z.string().optional(),
-  domainProvider: z.string().optional(),
   domainBoughtAt: z.string().optional(),
+  domainProvider: z.string().optional(),
 });
 
-const CreateClient = FormSchema.omit({
-  id: true,
-  maintenanceMode: true,
-  maintenanceMessage: true,
-});
-
-const UpdateClient = FormSchema.omit({
-  maintenanceMode: true,
-  maintenanceMessage: true,
-});
+const CreateClient = ClientSchema.omit({ id: true });
+const UpdateClient = ClientSchema;
 
 export async function createClient(
   prevState: State | undefined,
@@ -91,16 +66,17 @@ export async function createClient(
 ): Promise<State> {
   const validatedFields = CreateClient.safeParse({
     name: formData.get("name"),
+    email: formData.get("email"),
     domain: formData.get("domain"),
     billingStatus: formData.get("billingStatus"),
     planId: formData.get("planId"),
-    customPrice: formData.get("customPrice"),
-    amountPaid: formData.get("amountPaid"),
-    renewalPrice: formData.get("renewalPrice"),
-    description: formData.get("description"),
     billingCycle: formData.get("billingCycle"),
-    billingPeriod: formData.get("billingPeriod"),
-    startDate: formData.get("startDate"),
+    subscriptionPeriod: formData.get("subscriptionPeriod"),
+    customPrice: formData.get("customPrice"),
+    renewalPrice: formData.get("renewalPrice"),
+    domainExpiry: formData.get("domainExpiry"),
+    domainBoughtAt: formData.get("domainBoughtAt"),
+    domainProvider: formData.get("domainProvider"),
   });
 
   if (!validatedFields.success) {
@@ -112,57 +88,61 @@ export async function createClient(
 
   const {
     name,
-    domain,
     email,
+    domain,
     billingStatus,
     planId,
-    customPrice,
-    amountPaid,
-    renewalPrice,
-    description,
     billingCycle,
-    billingPeriod,
-    startDate,
+    subscriptionPeriod,
+    customPrice,
+    renewalPrice,
+    domainExpiry,
+    domainBoughtAt,
+    domainProvider,
   } = validatedFields.data;
 
   try {
-    const period = parseInt(billingPeriod || "1");
-    // const renewalDate = calculateRenewal(new Date(startDate || new Date()), billingCycle as any || 'MONTHLY', period);
+    const apiKey =
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
 
     const client = await prisma.client.create({
       data: {
         name,
-        domain,
         email: email || null,
-        billingStatus: billingStatus as BillingStatus,
-        maintenanceMode: false,
+        domain: domain || "",
+        billingStatus: (billingStatus as BillingStatus) || "UNPAID",
         planId: planId || null,
-        customPrice: new Prisma.Decimal(customPrice || 0),
-        amountPaid: new Prisma.Decimal(amountPaid || 0),
-        renewalPrice: new Prisma.Decimal(renewalPrice || 0),
-        description: description || null,
         billingCycle: billingCycle || "MONTHLY",
-        billingPeriod: period,
-        startDate: startDate ? new Date(startDate) : new Date(),
+        billingPeriod: subscriptionPeriod ? parseInt(subscriptionPeriod) : 1,
+        customPrice: customPrice ? new Prisma.Decimal(customPrice) : 0,
+        renewalPrice: renewalPrice ? new Prisma.Decimal(renewalPrice) : 0,
+        apiKey,
+        domainExpiry: domainExpiry ? new Date(domainExpiry) : null,
+        domainBoughtAt: domainBoughtAt ? new Date(domainBoughtAt) : null,
+        domainProvider: domainProvider || null,
       },
     });
 
-    await logAction("CREATE_CLIENT", "Client", client.id, {
-      name: client.name,
-      domain: client.domain,
-    });
+    await logAction(
+      "CREATE_CLIENT",
+      "Client",
+      client.id,
+      JSON.stringify({ name: client.name }),
+    );
 
-    // Send Welcome Email
     if (client.email) {
       await sendEmail({
         to: client.email,
         subject: "Welcome to Alaqmar Services",
-        html: `<h1>Welcome ${client.name}!</h1><p>Your account has been created. You can access your portal here: <a href="${process.env.NEXT_PUBLIC_APP_URL}/portal/${client.id}">Client Portal</a></p>`,
+        html: `<h1>Welcome ${client.name}!</h1><p>Your account has been created.</p>`,
       });
     }
   } catch (error) {
+    console.error(error);
     return {
-      message: "Database Error: Failed to Create Client.",
+      message:
+        "Database Error: Failed to Create Client. Domain might be duplicate.",
     };
   }
 
@@ -176,22 +156,19 @@ export async function updateClient(
   formData: FormData,
 ): Promise<State> {
   const validatedFields = UpdateClient.safeParse({
-    id: id,
+    id,
     name: formData.get("name"),
     email: formData.get("email"),
     domain: formData.get("domain"),
     billingStatus: formData.get("billingStatus"),
     planId: formData.get("planId"),
-    customPrice: formData.get("customPrice"),
-    amountPaid: formData.get("amountPaid"),
-    renewalPrice: formData.get("renewalPrice"),
-    description: formData.get("description"),
     billingCycle: formData.get("billingCycle"),
-    billingPeriod: formData.get("billingPeriod"),
-    startDate: formData.get("startDate"),
+    subscriptionPeriod: formData.get("subscriptionPeriod"),
+    customPrice: formData.get("customPrice"),
+    renewalPrice: formData.get("renewalPrice"),
     domainExpiry: formData.get("domainExpiry"),
-    domainProvider: formData.get("domainProvider"),
     domainBoughtAt: formData.get("domainBoughtAt"),
+    domainProvider: formData.get("domainProvider"),
   });
 
   if (!validatedFields.success) {
@@ -203,49 +180,43 @@ export async function updateClient(
 
   const {
     name,
-    domain,
     email,
+    domain,
     billingStatus,
     planId,
-    customPrice,
-    amountPaid,
-    renewalPrice,
-    description,
     billingCycle,
-    billingPeriod,
-    startDate,
+    subscriptionPeriod,
+    customPrice,
+    renewalPrice,
     domainExpiry,
-    domainProvider,
     domainBoughtAt,
+    domainProvider,
   } = validatedFields.data;
 
   try {
-    const period = parseInt(billingPeriod || "1");
-
     await prisma.client.update({
       where: { id },
       data: {
         name,
-        domain,
         email: email || null,
+        domain: domain || undefined,
         billingStatus: billingStatus as BillingStatus,
         planId: planId || null,
-        customPrice: new Prisma.Decimal(customPrice || 0),
-        amountPaid: new Prisma.Decimal(amountPaid || 0),
-        renewalPrice: new Prisma.Decimal(renewalPrice || 0),
-        description: description || null,
-        billingCycle: billingCycle || "MONTHLY",
-        billingPeriod: period,
-        startDate: startDate ? new Date(startDate) : undefined,
+        billingCycle: billingCycle,
+        billingPeriod: subscriptionPeriod
+          ? parseInt(subscriptionPeriod)
+          : undefined,
+        customPrice: customPrice ? new Prisma.Decimal(customPrice) : undefined,
+        renewalPrice: renewalPrice
+          ? new Prisma.Decimal(renewalPrice)
+          : undefined,
         domainExpiry: domainExpiry ? new Date(domainExpiry) : undefined,
-        domainProvider: domainProvider || null,
         domainBoughtAt: domainBoughtAt ? new Date(domainBoughtAt) : undefined,
+        domainProvider: domainProvider || undefined,
       },
     });
   } catch (error) {
-    return {
-      message: "Database Error: Failed to Update Client.",
-    };
+    return { message: "Database Error: Failed to Update Client." };
   }
 
   revalidatePath("/dashboard");
@@ -253,49 +224,49 @@ export async function updateClient(
   return { success: true, message: "Client updated successfully." };
 }
 
+export async function deleteClient(id: string) {
+  try {
+    await prisma.client.delete({ where: { id } });
+    await logAction("DELETE_CLIENT", "Client", id, "");
+    revalidatePath("/dashboard");
+  } catch (error) {
+    return;
+  }
+}
+
+// --- Transaction Actions ---
+
 export async function addTransaction(
   clientId: string,
   amount: number,
-  description: string,
-  type: "PAYMENT" | "ADJUSTMENT",
-  method: string,
+  type: string = "PAYMENT",
+  description: string = "",
 ) {
   try {
     const client = await prisma.client.findUnique({ where: { id: clientId } });
     if (!client) throw new Error("Client not found");
 
-    const [transaction, updatedClient] = await prisma.$transaction([
-      prisma.transaction.create({
-        data: {
-          clientId,
-          amount: new Prisma.Decimal(amount),
-          description,
-          type,
-          method,
-        },
-      }),
-      prisma.client.update({
-        where: { id: clientId },
-        data: {
-          amountPaid: {
-            increment: new Prisma.Decimal(amount),
-          },
-        },
-      }),
-    ]);
-
-    await logAction("ADD_TRANSACTION", "Transaction", transaction.id, {
-      clientId,
-      amount,
-      type,
+    const transaction = await prisma.transaction.create({
+      data: {
+        clientId,
+        amount: new Prisma.Decimal(amount),
+        type: type === "ADJUSTMENT" ? "ADJUSTMENT" : "PAYMENT",
+        description,
+      },
     });
 
-    // Send Receipt Email
-    if (client.email) {
+    await logAction(
+      "ADD_TRANSACTION",
+      "Transaction",
+      transaction.id,
+      JSON.stringify({ clientId, amount, type }),
+    );
+
+    if (client.email && type === "PAYMENT") {
       await sendEmail({
         to: client.email,
         subject: "Payment Receipt - Alaqmar Services",
-        html: `<h1>Payment Received</h1><p>Thank you for your payment of <strong>₹${amount}</strong>.</p><p>Transaction ID: ${transaction.id}</p>`,
+        html: `<h1>Payment Recorded</h1><p>Amount: <strong>₹${amount}</strong></p><p>Type: ${type}</p><p>Transaction ID: ${transaction.id}</p>`,
       });
     }
 
@@ -306,113 +277,17 @@ export async function addTransaction(
   }
 }
 
-export async function renewClient(id: string) {
-  try {
-    const client = await prisma.client.findUnique({ where: { id } });
-    if (!client) return { success: false, message: "Client not found" };
-
-    const currentStartDate = new Date(client.startDate);
-    let nextStartDate = new Date(currentStartDate);
-    const period = client.billingPeriod || 1;
-
-    switch (client.billingCycle) {
-      case "YEARLY":
-        nextStartDate.setFullYear(nextStartDate.getFullYear() + period);
-        break;
-      case "MONTHLY":
-        nextStartDate.setMonth(nextStartDate.getMonth() + period);
-        break;
-      case "WEEKLY":
-        nextStartDate.setDate(nextStartDate.getDate() + 7 * period);
-        break;
-      case "DAILY":
-        nextStartDate.setDate(nextStartDate.getDate() + period);
-        break;
-    }
-
-    await prisma.client.update({
-      where: { id },
-      data: {
-        startDate: nextStartDate,
-        amountPaid: 0, // Reset paid amount for new cycle
-        billingStatus: "UNPAID",
-        customPrice: client.renewalPrice, // Update current price to renewal price
-      },
-    });
-
-    await logAction("CREATE_CLIENT", "Client", client.id, {
-      name: client.name,
-      domain: client.domain,
-    });
-
-    // Send Renewal Email
-    if (client.email) {
-      await sendEmail({
-        to: client.email,
-        subject: "Subscription Renewed - Alaqmar Services",
-        html: `<h1>Subscription Renewed</h1><p>Your plan has been renewed. Next payment is due on ${nextStartDate.toDateString()}.</p>`,
-      });
-    }
-
-    revalidatePath(`/dashboard/clients/${id}`);
-    return {
-      success: true,
-      message: "Client subscription renewed successfully.",
-    };
-  } catch (error) {
-    return { success: false, message: "Failed to renew client." };
-  }
-}
-
-export async function toggleMaintenance(id: string, currentState: boolean) {
-  try {
-    await prisma.client.update({
-      where: { id },
-      data: { maintenanceMode: !currentState },
-    });
-    revalidatePath("/dashboard");
-  } catch (error) {
-    return;
-  }
-}
-
-export async function toggleBlock(id: string, currentState: boolean) {
-  try {
-    await prisma.client.update({
-      where: { id },
-      data: { isBlocked: !currentState },
-    });
-    revalidatePath("/dashboard");
-  } catch (error) {
-    return;
-  }
-}
-
-export async function deleteClient(id: string) {
-  try {
-    await prisma.client.delete({
-      where: { id },
-    });
-    revalidatePath("/dashboard");
-  } catch (error) {
-    return;
-  }
-}
+// --- User Actions --- (Restored)
 
 export async function setupAdmin(
   prevState: State | undefined,
   formData: FormData,
 ): Promise<State> {
-  // 1. Check if any user exists
   const userCount = await prisma.user.count();
   if (userCount > 0) {
-    return {
-      message: "Setup is already complete. Please login.",
-      errors: {},
-    };
+    return { message: "Setup is already complete. Please login.", errors: {} };
   }
 
-  // 2. Validate form data
   const validatedFields = z
     .object({
       email: z.string().email("Invalid email address"),
@@ -430,23 +305,15 @@ export async function setupAdmin(
 
   const { email, password, name } = validatedFields.data;
 
-  // 3. Create User
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name: name || "Admin",
-      },
+      data: { email, password: hashedPassword, name: name || "Admin" },
     });
   } catch (error) {
-    return {
-      message: "Database Error: Failed to Create Admin.",
-    };
+    return { message: "Database Error: Failed to Create Admin." };
   }
 
-  // 4. Redirect to login
   redirect("/login");
 }
 
@@ -474,23 +341,16 @@ export async function createUser(
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name: name || "Admin",
-      },
+      data: { email, password: hashedPassword, name: name || "Admin" },
     });
     revalidatePath("/dashboard");
-    return {
-      success: true,
-      message: "User created successfully.",
-    };
+    return { success: true, message: "User created successfully." };
   } catch (error) {
-    return {
-      message: "Database Error: Failed to Create User.",
-    };
+    return { message: "Database Error: Failed to Create User." };
   }
 }
+
+// --- Plan Actions ---
 
 export async function createPlan(
   prevState: State | undefined,
@@ -501,9 +361,10 @@ export async function createPlan(
       name: z.string().min(1, "Name is required"),
       price: z.string().min(1, "Price is required"),
       validity: z.string().min(1, "Validity is required"),
+      durationUnit: z.string().optional(),
       inclusions: z.string().optional(),
       exclusions: z.string().optional(),
-      displayOnPortfolio: z.string().optional(), // Checkbox sends "on" or undefined
+      displayOnPortfolio: z.string().optional(),
     })
     .safeParse(Object.fromEntries(formData.entries()));
 
@@ -514,10 +375,16 @@ export async function createPlan(
     };
   }
 
-  const { name, price, validity, inclusions, exclusions, displayOnPortfolio } =
-    validatedFields.data;
+  const {
+    name,
+    price,
+    validity,
+    durationUnit,
+    inclusions,
+    exclusions,
+    displayOnPortfolio,
+  } = validatedFields.data;
 
-  // Split by newline and filter empty strings
   const inclusionList = inclusions
     ? inclusions
         .split("\n")
@@ -537,34 +404,31 @@ export async function createPlan(
         name,
         price: new Prisma.Decimal(price),
         validity: parseInt(validity),
+        durationUnit: durationUnit || "MONTHLY",
         inclusions: inclusionList,
         exclusions: exclusionList,
         displayOnPortfolio: displayOnPortfolio === "on",
-        durationUnit: "MONTHLY",
       },
     });
     revalidatePath("/dashboard/plans");
-    revalidatePath("/dashboard");
     return { success: true, message: "Plan created successfully." };
   } catch (error) {
-    return {
-      message: "Database Error: Failed to Create Plan.",
-    };
+    return { message: "Database Error: Failed to Create Plan." };
   }
 }
 
 export async function deletePlan(id: string) {
   try {
-    await prisma.plan.delete({
-      where: { id },
-    });
+    await prisma.plan.delete({ where: { id } });
     revalidatePath("/dashboard/plans");
-    revalidatePath("/dashboard");
     return { success: true, message: "Plan deleted successfully." };
   } catch (error) {
     return { success: false, message: "Failed to delete plan." };
   }
 }
+
+// --- Showcase Actions ---
+
 export async function createProject(
   prevState: State | undefined,
   formData: FormData,
@@ -576,7 +440,8 @@ export async function createProject(
       imageUrl: z.string().optional(),
       siteUrl: z.string().optional(),
       repoUrl: z.string().optional(),
-      tags: z.string().optional(), // Comma separated
+      tags: z.string().optional(),
+      isFeatured: z.string().optional(),
     })
     .safeParse(Object.fromEntries(formData.entries()));
 
@@ -587,7 +452,7 @@ export async function createProject(
     };
   }
 
-  const { title, description, imageUrl, siteUrl, repoUrl, tags } =
+  const { title, description, imageUrl, siteUrl, repoUrl, tags, isFeatured } =
     validatedFields.data;
 
   const tagList = tags
@@ -606,22 +471,22 @@ export async function createProject(
         siteUrl: siteUrl || null,
         repoUrl: repoUrl || null,
         tags: tagList,
+        isFeatured: isFeatured === "on",
       },
     });
+
+    await logAction("CREATE_PROJECT", "Showcase", title, "Created new project");
+
     revalidatePath("/dashboard/showcase");
     return { success: true, message: "Project created successfully." };
   } catch (error) {
-    return {
-      message: "Database Error: Failed to Create Project.",
-    };
+    return { message: "Database Error: Failed to Create Project." };
   }
 }
 
 export async function deleteProject(id: string) {
   try {
-    await prisma.showcase.delete({
-      where: { id },
-    });
+    await prisma.showcase.delete({ where: { id } });
     revalidatePath("/dashboard/showcase");
     return { success: true, message: "Project deleted successfully." };
   } catch (error) {
