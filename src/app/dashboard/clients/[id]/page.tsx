@@ -7,9 +7,10 @@ import ClientEditForm from './client-edit-form';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ClientDetailsPage({ params }: { params: { id: string } }) {
+export default async function ClientDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const client = await prisma.client.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: {
             plan: true,
             transactions: {
@@ -55,16 +56,16 @@ export default async function ClientDetailsPage({ params }: { params: { id: stri
                     }}>
                         <button
                             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${client.isBlocked
-                                    ? 'bg-red-500 text-white hover:bg-red-600'
-                                    : 'bg-card-bg border border-card-border text-foreground hover:bg-background'
+                                ? 'bg-red-500 text-white hover:bg-red-600'
+                                : 'bg-card-bg border border-card-border text-foreground hover:bg-background'
                                 }`}
                         >
                             {client.isBlocked ? 'Unblock Client' : 'Block Access'}
                         </button>
                     </form>
                     <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${client.billingStatus === 'PAID' ? 'bg-green-500/10 text-green-500' :
-                            client.billingStatus === 'OVERDUE' ? 'bg-red-500/10 text-red-500' :
-                                'bg-yellow-500/10 text-yellow-500'
+                        client.billingStatus === 'OVERDUE' ? 'bg-red-500/10 text-red-500' :
+                            'bg-yellow-500/10 text-yellow-500'
                         }`}>
                         {client.billingStatus}
                     </div>
