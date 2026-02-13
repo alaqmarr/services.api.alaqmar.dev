@@ -51,7 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Plan: 'Plan',
   Client: 'Client',
+  Transaction: 'Transaction',
   User: 'User'
 } as const
 
@@ -71,6 +73,19 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const PlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  price: 'price',
+  validity: 'validity',
+  durationUnit: 'durationUnit',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
+
+
 export const ClientScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -79,15 +94,38 @@ export const ClientScalarFieldEnum = {
   maintenanceMode: 'maintenanceMode',
   maintenanceMessage: 'maintenanceMessage',
   apiKey: 'apiKey',
-  plan: 'plan',
+  planId: 'planId',
+  customPrice: 'customPrice',
+  amountPaid: 'amountPaid',
+  renewalPrice: 'renewalPrice',
+  description: 'description',
+  isBlocked: 'isBlocked',
   billingCycle: 'billingCycle',
   billingPeriod: 'billingPeriod',
   startDate: 'startDate',
+  domainExpiry: 'domainExpiry',
+  domainBoughtAt: 'domainBoughtAt',
+  domainProvider: 'domainProvider',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
+
+
+export const TransactionScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  amount: 'amount',
+  date: 'date',
+  description: 'description',
+  type: 'type',
+  method: 'method',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

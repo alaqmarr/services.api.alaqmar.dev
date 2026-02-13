@@ -1,7 +1,10 @@
 import CreateForm from '@/app/ui/dashboard/create-form';
 import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
 
-export default function Page() {
+export default async function Page() {
+    const plans = await prisma.plan.findMany();
+
     return (
         <main className="w-full max-w-2xl mx-auto py-8">
             <div className="mb-6 flex items-center justify-between">
@@ -13,7 +16,7 @@ export default function Page() {
                     ← Back to Clients
                 </Link>
             </div>
-            <CreateForm />
+            <CreateForm plans={plans} />
         </main>
     );
 }

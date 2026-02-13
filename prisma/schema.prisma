@@ -13,6 +13,17 @@ enum BillingStatus {
   OVERDUE
 }
 
+model Plan {
+  id           String   @id @default(cuid())
+  name         String
+  price        Decimal  @default(0.00)
+  validity     Int      @default(1)
+  durationUnit String   @default("MONTHLY") // DAILY, WEEKLY, MONTHLY, YEARLY
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  clients      Client[]
+}
+
 model Client {
   id                 String        @id @default(cuid())
   name               String
@@ -21,12 +32,54 @@ model Client {
   maintenanceMode    Boolean       @default(false)
   maintenanceMessage String?
   apiKey             String        @unique @default(cuid())
-  plan               String        @default("Standard")
+  
+  // Plan Relation
+  planId             String?
+  plan               Plan?         @relation(fields: [planId], references: [id])
+  
+  // Custom Billing
+  customPrice        Decimal       @default(0.00)
+  amountPaid         Decimal       @default(0.00)
+  renewalPrice       Decimal       @default(0.00) // The "Z" amount for future renewals
+  description        String?       // Payment terms or notes
+  
+  // Manual Block
+  isBlocked          Boolean       @default(false)
+
+  // Subscription Details
   billingCycle       String        @default("MONTHLY") // DAILY, WEEKLY, MONTHLY, YEARLY
-  billingPeriod      Int           @default(1) // Duration units (e.g. 13 Months)
+  billingPeriod      Int           @default(1) // Duration units
+  
   startDate          DateTime      @default(now())
+
+  // Domain Management
+  domainExpiry       DateTime?
+  domainBoughtAt     DateTime?
+  domainProvider     String?       // e.g., "GoDaddy", "Namecheap", "Hostinger"
+
+  transactions       Transaction[]
+  
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  clientId    String
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  amount      Decimal
+  date        DateTime @default(now())
+  description String?
+  type        TransactionType @default(PAYMENT) // PAYMENT, ADJUSTMENT
+  method      String?  // UPI, BANK_TRANSFER, CASH, ETC.
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum TransactionType {
+  PAYMENT
+  ADJUSTMENT
 }
 
 model User {

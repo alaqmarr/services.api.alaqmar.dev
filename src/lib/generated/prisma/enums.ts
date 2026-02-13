@@ -16,3 +16,11 @@ export const BillingStatus = {
 } as const
 
 export type BillingStatus = (typeof BillingStatus)[keyof typeof BillingStatus]
+
+
+export const TransactionType = {
+  PAYMENT: 'PAYMENT',
+  ADJUSTMENT: 'ADJUSTMENT'
+} as const
+
+export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]

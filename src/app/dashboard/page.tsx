@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 export default async function DashboardPage() {
     const clients = await prisma.client.findMany({
         orderBy: { createdAt: 'desc' },
+        include: { plan: true },
     });
 
     return (
@@ -26,7 +27,11 @@ export default async function DashboardPage() {
                 </Link>
             </div>
 
-            <ClientTable clients={clients} />
+            <ClientTable clients={clients.map(c => ({
+                ...c,
+                customPrice: Number(c.customPrice),
+                amountPaid: Number(c.amountPaid)
+            }))} />
         </div>
     );
 }

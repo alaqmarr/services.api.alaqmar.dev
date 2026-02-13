@@ -6,11 +6,24 @@ import { useFormState } from 'react-dom';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
-export default function CreateForm() {
+export default function CreateForm({ plans }: { plans?: any[] }) {
     const initialState: State = { message: null, errors: {} };
     const [state, dispatch] = useFormState(createClient, initialState);
 
     const [showSuccess, setShowSuccess] = useState(false);
+    const [selectedPlanId, setSelectedPlanId] = useState<string>("");
+    const [customPrice, setCustomPrice] = useState<string>("");
+    const [amountPaid, setAmountPaid] = useState<string>("");
+
+    // Auto-fill price when plan changes
+    useEffect(() => {
+        if (selectedPlanId && plans) {
+            const plan = plans.find(p => p.id === selectedPlanId);
+            if (plan) {
+                setCustomPrice(plan.price.toString());
+            }
+        }
+    }, [selectedPlanId, plans]);
 
     useEffect(() => {
         if (state?.success && state.client) {
@@ -18,6 +31,8 @@ export default function CreateForm() {
             toast.success("Client created successfully!");
         }
     }, [state]);
+
+    const dueAmount = (parseFloat(customPrice || "0") - parseFloat(amountPaid || "0")).toFixed(2);
 
     if (showSuccess && state.client) {
         const authUrl = `${window.location.origin}/api/authorize?clientId=${state.client.id}`;
@@ -147,107 +162,140 @@ export default function CreateForm() {
                     </div>
                 </div>
 
-                {/* Billing Status */}
-                <div>
-                    <label className="block text-sm font-medium text-foreground mb-3">Billing Status</label>
-                    <div className="grid grid-cols-3 gap-3">
-                        <LabelRadio
-                            id="paid"
-                            name="billingStatus"
-                            value="PAID"
-                            defaultChecked
-                            label="Paid"
-                            colorClass="peer-checked:border-[#ccd5ae] peer-checked:text-[#2d2a26] peer-checked:bg-[#ccd5ae]/20"
-                        />
-                        <LabelRadio
-                            id="unpaid"
-                            name="billingStatus"
-                            value="UNPAID"
-                            label="Unpaid"
-                            colorClass="peer-checked:border-card-border peer-checked:text-foreground peer-checked:bg-background"
-                        />
-                        <LabelRadio
-                            id="overdue"
-                            name="billingStatus"
-                            value="OVERDUE"
-                            label="Overdue"
-                            colorClass="peer-checked:border-[#bc8a5f] peer-checked:text-[#bc8a5f] peer-checked:bg-[#bc8a5f]/10"
-                        />
-                    </div>
-                </div>
+                <div className="border-t border-card-border pt-6">
+                    <h3 className="text-lg font-bold text-foreground mb-4">Plan & Billing</h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Plan Selection */}
-                    <div>
-                        <label className="block text-sm font-medium text-foreground mb-3">Subscription Plan</label>
-                        <select
-                            name="plan"
-                            className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
-                        >
-                            <option value="Basic">Basic Plan</option>
-                            <option value="Standard">Standard Plan</option>
-                            <option value="Pro">Pro Plan</option>
-                            <option value="Enterprise">Enterprise</option>
-                        </select>
-                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        {/* Plan Selection */}
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-3">Subscription Plan</label>
+                            <select
+                                name="planId"
+                                value={selectedPlanId}
+                                onChange={(e) => setSelectedPlanId(e.target.value)}
+                                className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
+                            >
+                                <option value="">Select a Plan</option>
+                                {plans?.map((plan) => (
+                                    <option key={plan.id} value={plan.id}>
+                                        {plan.name} - ₹{plan.price} / {plan.durationUnit}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                    {/* Billing Cycle */}
-                    <div>
-                        <label className="block text-sm font-medium text-foreground mb-3">Billing Cycle</label>
-                        <div className="flex gap-4 items-start">
-                            <div className="w-24 flex-shrink-0">
-                                <label className="sr-only" htmlFor="period">Duration</label>
-                                <div className="relative rounded-md shadow-sm">
-                                    <input
-                                        type="number"
-                                        name="billingPeriod"
-                                        id="period"
-                                        min="1"
-                                        defaultValue="1"
-                                        className="block w-full rounded-lg border-card-border bg-background text-foreground focus:border-primary focus:ring-primary sm:text-sm py-3 px-3 text-center font-semibold"
-                                        placeholder="1"
-                                    />
-                                    <div className="absolute inset-y-0 right-0 pr-1 flex items-center pointer-events-none">
-                                        <span className="text-secondary text-xs mr-1">x</span>
+                        {/* Billing Cycle (Hidden if plan selected, or optional override) */}
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-3">Billing Cycle</label>
+                            <div className="flex gap-4 items-start">
+                                <div className="w-24 flex-shrink-0">
+                                    <div className="relative rounded-md shadow-sm">
+                                        <input
+                                            type="number"
+                                            name="billingPeriod"
+                                            id="period"
+                                            min="1"
+                                            defaultValue="1"
+                                            className="block w-full rounded-lg border-card-border bg-background text-foreground focus:border-primary focus:ring-primary sm:text-sm py-3 px-3 text-center font-semibold"
+                                            placeholder="1"
+                                        />
+                                        <div className="absolute inset-y-0 right-0 pr-1 flex items-center pointer-events-none">
+                                            <span className="text-secondary text-xs mr-1">x</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="flex-grow grid grid-cols-4 gap-2">
-                                <LabelRadio
-                                    id="daily"
-                                    name="billingCycle"
-                                    value="DAILY"
-                                    label="Daily"
-                                    colorClass="peer-checked:border-secondary peer-checked:text-foreground peer-checked:bg-secondary/20"
-                                />
-                                <LabelRadio
-                                    id="weekly"
-                                    name="billingCycle"
-                                    value="WEEKLY"
-                                    label="Weekly"
-                                    colorClass="peer-checked:border-primary peer-checked:text-primary peer-checked:bg-primary/10"
-                                />
-                                <LabelRadio
-                                    id="monthly"
-                                    name="billingCycle"
-                                    value="MONTHLY"
-                                    defaultChecked
-                                    label="Monthly"
-                                    colorClass="peer-checked:border-primary peer-checked:text-foreground peer-checked:bg-primary/20"
-                                />
-                                <LabelRadio
-                                    id="yearly"
-                                    name="billingCycle"
-                                    value="YEARLY"
-                                    label="Yearly"
-                                    colorClass="peer-checked:border-foreground peer-checked:text-foreground peer-checked:bg-foreground/5"
-                                />
+                                <div className="flex-grow">
+                                    <select
+                                        name="billingCycle"
+                                        className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-3 px-3"
+                                        defaultValue="MONTHLY"
+                                    >
+                                        <option value="DAILY">Days</option>
+                                        <option value="WEEKLY">Weeks</option>
+                                        <option value="MONTHLY">Months</option>
+                                        <option value="YEARLY">Years</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 bg-background p-4 rounded-xl border border-card-border">
+                        {/* Total Cost */}
+                        <div>
+                            <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-2">Total Cost (₹)</label>
+                            <div className="relative rounded-md shadow-sm">
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span className="text-foreground sm:text-sm">₹</span>
+                                </div>
+                                <input
+                                    type="number"
+                                    name="customPrice"
+                                    value={customPrice}
+                                    onChange={(e) => setCustomPrice(e.target.value)}
+                                    className="block w-full rounded-lg border-card-border bg-card-bg text-foreground pl-8 focus:border-primary focus:ring-primary sm:text-sm py-2.5 font-bold"
+                                    placeholder="0.00"
+                                    step="0.01"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Amount Paid */}
+                        <div>
+                            <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-2">Amount Paid (₹)</label>
+                            <div className="relative rounded-md shadow-sm">
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span className="text-green-600 sm:text-sm">₹</span>
+                                </div>
+                                <input
+                                    type="number"
+                                    name="amountPaid"
+                                    value={amountPaid}
+                                    onChange={(e) => setAmountPaid(e.target.value)}
+                                    className="block w-full rounded-lg border-card-border bg-card-bg text-foreground pl-8 focus:border-primary focus:ring-primary sm:text-sm py-2.5 font-bold"
+                                    placeholder="0.00"
+                                    step="0.01"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Due Amount */}
+                        <div>
+                            <label className="block text-xs font-medium text-secondary uppercase tracking-wider mb-2">Due Amount</label>
+                            <div className={`text-xl font-bold py-2 ${parseFloat(dueAmount) > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                                ₹ {dueAmount}
+                            </div>
+                            <input type="hidden" name="billingStatus" value={parseFloat(dueAmount) > 0 ? "UNPAID" : "PAID"} />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        {/* Renewal Price */}
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-1">Renewal Price (₹)</label>
+                            <input
+                                type="number"
+                                name="renewalPrice"
+                                placeholder="Amount to be charged on renewal"
+                                className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
+                                step="0.01"
+                            />
+                            <p className="text-xs text-secondary mt-1">Leave empty to use Plan default</p>
+                        </div>
+
+                        {/* Description/Terms */}
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-1">Payment Terms / Notes</label>
+                            <textarea
+                                name="description"
+                                placeholder="e.g. 50% Advance, 50% on Deployment"
+                                className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3 h-[86px] resize-none"
+                            />
+                        </div>
+                    </div>
+
                     {/* Start Date */}
-                    <div className="md:col-span-2">
+                    <div>
                         <label htmlFor="startDate" className="block text-sm font-medium text-foreground mb-1">
                             Start Date
                         </label>
@@ -258,7 +306,6 @@ export default function CreateForm() {
                             defaultValue={new Date().toISOString().split('T')[0]}
                             className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3"
                         />
-                        <p className="mt-1 text-xs text-secondary">Defaults to today if left blank.</p>
                     </div>
                 </div>
 

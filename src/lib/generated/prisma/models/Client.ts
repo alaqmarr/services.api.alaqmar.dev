@@ -27,10 +27,16 @@ export type AggregateClient = {
 }
 
 export type ClientAvgAggregateOutputType = {
+  customPrice: runtime.Decimal | null
+  amountPaid: runtime.Decimal | null
+  renewalPrice: runtime.Decimal | null
   billingPeriod: number | null
 }
 
 export type ClientSumAggregateOutputType = {
+  customPrice: runtime.Decimal | null
+  amountPaid: runtime.Decimal | null
+  renewalPrice: runtime.Decimal | null
   billingPeriod: number | null
 }
 
@@ -42,10 +48,18 @@ export type ClientMinAggregateOutputType = {
   maintenanceMode: boolean | null
   maintenanceMessage: string | null
   apiKey: string | null
-  plan: string | null
+  planId: string | null
+  customPrice: runtime.Decimal | null
+  amountPaid: runtime.Decimal | null
+  renewalPrice: runtime.Decimal | null
+  description: string | null
+  isBlocked: boolean | null
   billingCycle: string | null
   billingPeriod: number | null
   startDate: Date | null
+  domainExpiry: Date | null
+  domainBoughtAt: Date | null
+  domainProvider: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,10 +72,18 @@ export type ClientMaxAggregateOutputType = {
   maintenanceMode: boolean | null
   maintenanceMessage: string | null
   apiKey: string | null
-  plan: string | null
+  planId: string | null
+  customPrice: runtime.Decimal | null
+  amountPaid: runtime.Decimal | null
+  renewalPrice: runtime.Decimal | null
+  description: string | null
+  isBlocked: boolean | null
   billingCycle: string | null
   billingPeriod: number | null
   startDate: Date | null
+  domainExpiry: Date | null
+  domainBoughtAt: Date | null
+  domainProvider: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,10 +96,18 @@ export type ClientCountAggregateOutputType = {
   maintenanceMode: number
   maintenanceMessage: number
   apiKey: number
-  plan: number
+  planId: number
+  customPrice: number
+  amountPaid: number
+  renewalPrice: number
+  description: number
+  isBlocked: number
   billingCycle: number
   billingPeriod: number
   startDate: number
+  domainExpiry: number
+  domainBoughtAt: number
+  domainProvider: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -85,10 +115,16 @@ export type ClientCountAggregateOutputType = {
 
 
 export type ClientAvgAggregateInputType = {
+  customPrice?: true
+  amountPaid?: true
+  renewalPrice?: true
   billingPeriod?: true
 }
 
 export type ClientSumAggregateInputType = {
+  customPrice?: true
+  amountPaid?: true
+  renewalPrice?: true
   billingPeriod?: true
 }
 
@@ -100,10 +136,18 @@ export type ClientMinAggregateInputType = {
   maintenanceMode?: true
   maintenanceMessage?: true
   apiKey?: true
-  plan?: true
+  planId?: true
+  customPrice?: true
+  amountPaid?: true
+  renewalPrice?: true
+  description?: true
+  isBlocked?: true
   billingCycle?: true
   billingPeriod?: true
   startDate?: true
+  domainExpiry?: true
+  domainBoughtAt?: true
+  domainProvider?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -116,10 +160,18 @@ export type ClientMaxAggregateInputType = {
   maintenanceMode?: true
   maintenanceMessage?: true
   apiKey?: true
-  plan?: true
+  planId?: true
+  customPrice?: true
+  amountPaid?: true
+  renewalPrice?: true
+  description?: true
+  isBlocked?: true
   billingCycle?: true
   billingPeriod?: true
   startDate?: true
+  domainExpiry?: true
+  domainBoughtAt?: true
+  domainProvider?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -132,10 +184,18 @@ export type ClientCountAggregateInputType = {
   maintenanceMode?: true
   maintenanceMessage?: true
   apiKey?: true
-  plan?: true
+  planId?: true
+  customPrice?: true
+  amountPaid?: true
+  renewalPrice?: true
+  description?: true
+  isBlocked?: true
   billingCycle?: true
   billingPeriod?: true
   startDate?: true
+  domainExpiry?: true
+  domainBoughtAt?: true
+  domainProvider?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -235,10 +295,18 @@ export type ClientGroupByOutputType = {
   maintenanceMode: boolean
   maintenanceMessage: string | null
   apiKey: string
-  plan: string
+  planId: string | null
+  customPrice: runtime.Decimal
+  amountPaid: runtime.Decimal
+  renewalPrice: runtime.Decimal
+  description: string | null
+  isBlocked: boolean
   billingCycle: string
   billingPeriod: number
   startDate: Date
+  domainExpiry: Date | null
+  domainBoughtAt: Date | null
+  domainProvider: string | null
   createdAt: Date
   updatedAt: Date
   _count: ClientCountAggregateOutputType | null
@@ -274,12 +342,22 @@ export type ClientWhereInput = {
   maintenanceMode?: Prisma.BoolFilter<"Client"> | boolean
   maintenanceMessage?: Prisma.StringNullableFilter<"Client"> | string | null
   apiKey?: Prisma.StringFilter<"Client"> | string
-  plan?: Prisma.StringFilter<"Client"> | string
+  planId?: Prisma.StringNullableFilter<"Client"> | string | null
+  customPrice?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringNullableFilter<"Client"> | string | null
+  isBlocked?: Prisma.BoolFilter<"Client"> | boolean
   billingCycle?: Prisma.StringFilter<"Client"> | string
   billingPeriod?: Prisma.IntFilter<"Client"> | number
   startDate?: Prisma.DateTimeFilter<"Client"> | Date | string
+  domainExpiry?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  domainBoughtAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  domainProvider?: Prisma.StringNullableFilter<"Client"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
+  plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
+  transactions?: Prisma.TransactionListRelationFilter
 }
 
 export type ClientOrderByWithRelationInput = {
@@ -290,12 +368,22 @@ export type ClientOrderByWithRelationInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   apiKey?: Prisma.SortOrder
-  plan?: Prisma.SortOrder
+  planId?: Prisma.SortOrderInput | Prisma.SortOrder
+  customPrice?: Prisma.SortOrder
+  amountPaid?: Prisma.SortOrder
+  renewalPrice?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  isBlocked?: Prisma.SortOrder
   billingCycle?: Prisma.SortOrder
   billingPeriod?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  domainExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  domainBoughtAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  domainProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  plan?: Prisma.PlanOrderByWithRelationInput
+  transactions?: Prisma.TransactionOrderByRelationAggregateInput
 }
 
 export type ClientWhereUniqueInput = Prisma.AtLeast<{
@@ -309,12 +397,22 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   billingStatus?: Prisma.EnumBillingStatusFilter<"Client"> | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFilter<"Client"> | boolean
   maintenanceMessage?: Prisma.StringNullableFilter<"Client"> | string | null
-  plan?: Prisma.StringFilter<"Client"> | string
+  planId?: Prisma.StringNullableFilter<"Client"> | string | null
+  customPrice?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringNullableFilter<"Client"> | string | null
+  isBlocked?: Prisma.BoolFilter<"Client"> | boolean
   billingCycle?: Prisma.StringFilter<"Client"> | string
   billingPeriod?: Prisma.IntFilter<"Client"> | number
   startDate?: Prisma.DateTimeFilter<"Client"> | Date | string
+  domainExpiry?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  domainBoughtAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  domainProvider?: Prisma.StringNullableFilter<"Client"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
+  plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
+  transactions?: Prisma.TransactionListRelationFilter
 }, "id" | "domain" | "apiKey">
 
 export type ClientOrderByWithAggregationInput = {
@@ -325,10 +423,18 @@ export type ClientOrderByWithAggregationInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   apiKey?: Prisma.SortOrder
-  plan?: Prisma.SortOrder
+  planId?: Prisma.SortOrderInput | Prisma.SortOrder
+  customPrice?: Prisma.SortOrder
+  amountPaid?: Prisma.SortOrder
+  renewalPrice?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  isBlocked?: Prisma.SortOrder
   billingCycle?: Prisma.SortOrder
   billingPeriod?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  domainExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
+  domainBoughtAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  domainProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ClientCountOrderByAggregateInput
@@ -349,10 +455,18 @@ export type ClientScalarWhereWithAggregatesInput = {
   maintenanceMode?: Prisma.BoolWithAggregatesFilter<"Client"> | boolean
   maintenanceMessage?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   apiKey?: Prisma.StringWithAggregatesFilter<"Client"> | string
-  plan?: Prisma.StringWithAggregatesFilter<"Client"> | string
+  planId?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  customPrice?: Prisma.DecimalWithAggregatesFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalWithAggregatesFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalWithAggregatesFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  isBlocked?: Prisma.BoolWithAggregatesFilter<"Client"> | boolean
   billingCycle?: Prisma.StringWithAggregatesFilter<"Client"> | string
   billingPeriod?: Prisma.IntWithAggregatesFilter<"Client"> | number
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
+  domainExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"Client"> | Date | string | null
+  domainBoughtAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Client"> | Date | string | null
+  domainProvider?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
 }
@@ -365,12 +479,21 @@ export type ClientCreateInput = {
   maintenanceMode?: boolean
   maintenanceMessage?: string | null
   apiKey?: string
-  plan?: string
+  customPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  isBlocked?: boolean
   billingCycle?: string
   billingPeriod?: number
   startDate?: Date | string
+  domainExpiry?: Date | string | null
+  domainBoughtAt?: Date | string | null
+  domainProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  plan?: Prisma.PlanCreateNestedOneWithoutClientsInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateInput = {
@@ -381,12 +504,21 @@ export type ClientUncheckedCreateInput = {
   maintenanceMode?: boolean
   maintenanceMessage?: string | null
   apiKey?: string
-  plan?: string
+  planId?: string | null
+  customPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  isBlocked?: boolean
   billingCycle?: string
   billingPeriod?: number
   startDate?: Date | string
+  domainExpiry?: Date | string | null
+  domainBoughtAt?: Date | string | null
+  domainProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientUpdateInput = {
@@ -397,12 +529,21 @@ export type ClientUpdateInput = {
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
   billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.PlanUpdateOneWithoutClientsNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateInput = {
@@ -413,12 +554,21 @@ export type ClientUncheckedUpdateInput = {
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
   billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateManyInput = {
@@ -429,10 +579,18 @@ export type ClientCreateManyInput = {
   maintenanceMode?: boolean
   maintenanceMessage?: string | null
   apiKey?: string
-  plan?: string
+  planId?: string | null
+  customPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  isBlocked?: boolean
   billingCycle?: string
   billingPeriod?: number
   startDate?: Date | string
+  domainExpiry?: Date | string | null
+  domainBoughtAt?: Date | string | null
+  domainProvider?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -445,10 +603,17 @@ export type ClientUpdateManyMutationInput = {
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
   billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -461,12 +626,30 @@ export type ClientUncheckedUpdateManyInput = {
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
-  plan?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
   billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ClientListRelationFilter = {
+  every?: Prisma.ClientWhereInput
+  some?: Prisma.ClientWhereInput
+  none?: Prisma.ClientWhereInput
+}
+
+export type ClientOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type ClientCountOrderByAggregateInput = {
@@ -477,15 +660,26 @@ export type ClientCountOrderByAggregateInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
-  plan?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
+  customPrice?: Prisma.SortOrder
+  amountPaid?: Prisma.SortOrder
+  renewalPrice?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isBlocked?: Prisma.SortOrder
   billingCycle?: Prisma.SortOrder
   billingPeriod?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  domainExpiry?: Prisma.SortOrder
+  domainBoughtAt?: Prisma.SortOrder
+  domainProvider?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ClientAvgOrderByAggregateInput = {
+  customPrice?: Prisma.SortOrder
+  amountPaid?: Prisma.SortOrder
+  renewalPrice?: Prisma.SortOrder
   billingPeriod?: Prisma.SortOrder
 }
 
@@ -497,10 +691,18 @@ export type ClientMaxOrderByAggregateInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
-  plan?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
+  customPrice?: Prisma.SortOrder
+  amountPaid?: Prisma.SortOrder
+  renewalPrice?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isBlocked?: Prisma.SortOrder
   billingCycle?: Prisma.SortOrder
   billingPeriod?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  domainExpiry?: Prisma.SortOrder
+  domainBoughtAt?: Prisma.SortOrder
+  domainProvider?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -513,20 +715,74 @@ export type ClientMinOrderByAggregateInput = {
   maintenanceMode?: Prisma.SortOrder
   maintenanceMessage?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
-  plan?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
+  customPrice?: Prisma.SortOrder
+  amountPaid?: Prisma.SortOrder
+  renewalPrice?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isBlocked?: Prisma.SortOrder
   billingCycle?: Prisma.SortOrder
   billingPeriod?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
+  domainExpiry?: Prisma.SortOrder
+  domainBoughtAt?: Prisma.SortOrder
+  domainProvider?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ClientSumOrderByAggregateInput = {
+  customPrice?: Prisma.SortOrder
+  amountPaid?: Prisma.SortOrder
+  renewalPrice?: Prisma.SortOrder
   billingPeriod?: Prisma.SortOrder
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type ClientScalarRelationFilter = {
+  is?: Prisma.ClientWhereInput
+  isNot?: Prisma.ClientWhereInput
+}
+
+export type ClientCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutPlanInput, Prisma.ClientUncheckedCreateWithoutPlanInput> | Prisma.ClientCreateWithoutPlanInput[] | Prisma.ClientUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutPlanInput | Prisma.ClientCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.ClientCreateManyPlanInputEnvelope
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+}
+
+export type ClientUncheckedCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutPlanInput, Prisma.ClientUncheckedCreateWithoutPlanInput> | Prisma.ClientCreateWithoutPlanInput[] | Prisma.ClientUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutPlanInput | Prisma.ClientCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.ClientCreateManyPlanInputEnvelope
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+}
+
+export type ClientUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutPlanInput, Prisma.ClientUncheckedCreateWithoutPlanInput> | Prisma.ClientCreateWithoutPlanInput[] | Prisma.ClientUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutPlanInput | Prisma.ClientCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.ClientUpsertWithWhereUniqueWithoutPlanInput | Prisma.ClientUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.ClientCreateManyPlanInputEnvelope
+  set?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  disconnect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  delete?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  update?: Prisma.ClientUpdateWithWhereUniqueWithoutPlanInput | Prisma.ClientUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.ClientUpdateManyWithWhereWithoutPlanInput | Prisma.ClientUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
+}
+
+export type ClientUncheckedUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutPlanInput, Prisma.ClientUncheckedCreateWithoutPlanInput> | Prisma.ClientCreateWithoutPlanInput[] | Prisma.ClientUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutPlanInput | Prisma.ClientCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.ClientUpsertWithWhereUniqueWithoutPlanInput | Prisma.ClientUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.ClientCreateManyPlanInputEnvelope
+  set?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  disconnect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  delete?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  update?: Prisma.ClientUpdateWithWhereUniqueWithoutPlanInput | Prisma.ClientUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.ClientUpdateManyWithWhereWithoutPlanInput | Prisma.ClientUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
 }
 
 export type EnumBillingStatusFieldUpdateOperationsInput = {
@@ -541,18 +797,360 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type ClientCreateNestedOneWithoutTransactionsInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutTransactionsInput, Prisma.ClientUncheckedCreateWithoutTransactionsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutTransactionsInput
+  connect?: Prisma.ClientWhereUniqueInput
 }
 
+export type ClientUpdateOneRequiredWithoutTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutTransactionsInput, Prisma.ClientUncheckedCreateWithoutTransactionsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutTransactionsInput
+  upsert?: Prisma.ClientUpsertWithoutTransactionsInput
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutTransactionsInput, Prisma.ClientUpdateWithoutTransactionsInput>, Prisma.ClientUncheckedUpdateWithoutTransactionsInput>
+}
+
+export type ClientCreateWithoutPlanInput = {
+  id?: string
+  name: string
+  domain: string
+  billingStatus?: $Enums.BillingStatus
+  maintenanceMode?: boolean
+  maintenanceMessage?: string | null
+  apiKey?: string
+  customPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  isBlocked?: boolean
+  billingCycle?: string
+  billingPeriod?: number
+  startDate?: Date | string
+  domainExpiry?: Date | string | null
+  domainBoughtAt?: Date | string | null
+  domainProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transactions?: Prisma.TransactionCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutPlanInput = {
+  id?: string
+  name: string
+  domain: string
+  billingStatus?: $Enums.BillingStatus
+  maintenanceMode?: boolean
+  maintenanceMessage?: string | null
+  apiKey?: string
+  customPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  isBlocked?: boolean
+  billingCycle?: string
+  billingPeriod?: number
+  startDate?: Date | string
+  domainExpiry?: Date | string | null
+  domainBoughtAt?: Date | string | null
+  domainProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutPlanInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutPlanInput, Prisma.ClientUncheckedCreateWithoutPlanInput>
+}
+
+export type ClientCreateManyPlanInputEnvelope = {
+  data: Prisma.ClientCreateManyPlanInput | Prisma.ClientCreateManyPlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type ClientUpsertWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.ClientWhereUniqueInput
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutPlanInput, Prisma.ClientUncheckedUpdateWithoutPlanInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutPlanInput, Prisma.ClientUncheckedCreateWithoutPlanInput>
+}
+
+export type ClientUpdateWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.ClientWhereUniqueInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutPlanInput, Prisma.ClientUncheckedUpdateWithoutPlanInput>
+}
+
+export type ClientUpdateManyWithWhereWithoutPlanInput = {
+  where: Prisma.ClientScalarWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateManyMutationInput, Prisma.ClientUncheckedUpdateManyWithoutPlanInput>
+}
+
+export type ClientScalarWhereInput = {
+  AND?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
+  OR?: Prisma.ClientScalarWhereInput[]
+  NOT?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
+  id?: Prisma.StringFilter<"Client"> | string
+  name?: Prisma.StringFilter<"Client"> | string
+  domain?: Prisma.StringFilter<"Client"> | string
+  billingStatus?: Prisma.EnumBillingStatusFilter<"Client"> | $Enums.BillingStatus
+  maintenanceMode?: Prisma.BoolFilter<"Client"> | boolean
+  maintenanceMessage?: Prisma.StringNullableFilter<"Client"> | string | null
+  apiKey?: Prisma.StringFilter<"Client"> | string
+  planId?: Prisma.StringNullableFilter<"Client"> | string | null
+  customPrice?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFilter<"Client"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.StringNullableFilter<"Client"> | string | null
+  isBlocked?: Prisma.BoolFilter<"Client"> | boolean
+  billingCycle?: Prisma.StringFilter<"Client"> | string
+  billingPeriod?: Prisma.IntFilter<"Client"> | number
+  startDate?: Prisma.DateTimeFilter<"Client"> | Date | string
+  domainExpiry?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  domainBoughtAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  domainProvider?: Prisma.StringNullableFilter<"Client"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
+}
+
+export type ClientCreateWithoutTransactionsInput = {
+  id?: string
+  name: string
+  domain: string
+  billingStatus?: $Enums.BillingStatus
+  maintenanceMode?: boolean
+  maintenanceMessage?: string | null
+  apiKey?: string
+  customPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  isBlocked?: boolean
+  billingCycle?: string
+  billingPeriod?: number
+  startDate?: Date | string
+  domainExpiry?: Date | string | null
+  domainBoughtAt?: Date | string | null
+  domainProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  plan?: Prisma.PlanCreateNestedOneWithoutClientsInput
+}
+
+export type ClientUncheckedCreateWithoutTransactionsInput = {
+  id?: string
+  name: string
+  domain: string
+  billingStatus?: $Enums.BillingStatus
+  maintenanceMode?: boolean
+  maintenanceMessage?: string | null
+  apiKey?: string
+  planId?: string | null
+  customPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  isBlocked?: boolean
+  billingCycle?: string
+  billingPeriod?: number
+  startDate?: Date | string
+  domainExpiry?: Date | string | null
+  domainBoughtAt?: Date | string | null
+  domainProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ClientCreateOrConnectWithoutTransactionsInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutTransactionsInput, Prisma.ClientUncheckedCreateWithoutTransactionsInput>
+}
+
+export type ClientUpsertWithoutTransactionsInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutTransactionsInput, Prisma.ClientUncheckedUpdateWithoutTransactionsInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutTransactionsInput, Prisma.ClientUncheckedCreateWithoutTransactionsInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutTransactionsInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutTransactionsInput, Prisma.ClientUncheckedUpdateWithoutTransactionsInput>
+}
+
+export type ClientUpdateWithoutTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.PlanUpdateOneWithoutClientsNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ClientCreateManyPlanInput = {
+  id?: string
+  name: string
+  domain: string
+  billingStatus?: $Enums.BillingStatus
+  maintenanceMode?: boolean
+  maintenanceMessage?: string | null
+  apiKey?: string
+  customPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: string | null
+  isBlocked?: boolean
+  billingCycle?: string
+  billingPeriod?: number
+  startDate?: Date | string
+  domainExpiry?: Date | string | null
+  domainBoughtAt?: Date | string | null
+  domainProvider?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ClientUpdateWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactions?: Prisma.TransactionUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateManyWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
+  maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  maintenanceMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  customPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amountPaid?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  renewalPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBlocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  billingCycle?: Prisma.StringFieldUpdateOperationsInput | string
+  billingPeriod?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  domainExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainBoughtAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  domainProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type ClientCountOutputType
+ */
+
+export type ClientCountOutputType = {
+  transactions: number
+}
+
+export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  transactions?: boolean | ClientCountOutputTypeCountTransactionsArgs
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ClientCountOutputType
+   */
+  select?: Prisma.ClientCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TransactionWhereInput
+}
 
 
 export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -563,12 +1161,23 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   maintenanceMode?: boolean
   maintenanceMessage?: boolean
   apiKey?: boolean
-  plan?: boolean
+  planId?: boolean
+  customPrice?: boolean
+  amountPaid?: boolean
+  renewalPrice?: boolean
+  description?: boolean
+  isBlocked?: boolean
   billingCycle?: boolean
   billingPeriod?: boolean
   startDate?: boolean
+  domainExpiry?: boolean
+  domainBoughtAt?: boolean
+  domainProvider?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  plan?: boolean | Prisma.Client$planArgs<ExtArgs>
+  transactions?: boolean | Prisma.Client$transactionsArgs<ExtArgs>
+  _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
 export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -579,12 +1188,21 @@ export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   maintenanceMode?: boolean
   maintenanceMessage?: boolean
   apiKey?: boolean
-  plan?: boolean
+  planId?: boolean
+  customPrice?: boolean
+  amountPaid?: boolean
+  renewalPrice?: boolean
+  description?: boolean
+  isBlocked?: boolean
   billingCycle?: boolean
   billingPeriod?: boolean
   startDate?: boolean
+  domainExpiry?: boolean
+  domainBoughtAt?: boolean
+  domainProvider?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  plan?: boolean | Prisma.Client$planArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
 export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -595,12 +1213,21 @@ export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   maintenanceMode?: boolean
   maintenanceMessage?: boolean
   apiKey?: boolean
-  plan?: boolean
+  planId?: boolean
+  customPrice?: boolean
+  amountPaid?: boolean
+  renewalPrice?: boolean
+  description?: boolean
+  isBlocked?: boolean
   billingCycle?: boolean
   billingPeriod?: boolean
   startDate?: boolean
+  domainExpiry?: boolean
+  domainBoughtAt?: boolean
+  domainProvider?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  plan?: boolean | Prisma.Client$planArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
 export type ClientSelectScalar = {
@@ -611,19 +1238,41 @@ export type ClientSelectScalar = {
   maintenanceMode?: boolean
   maintenanceMessage?: boolean
   apiKey?: boolean
-  plan?: boolean
+  planId?: boolean
+  customPrice?: boolean
+  amountPaid?: boolean
+  renewalPrice?: boolean
+  description?: boolean
+  isBlocked?: boolean
   billingCycle?: boolean
   billingPeriod?: boolean
   startDate?: boolean
+  domainExpiry?: boolean
+  domainBoughtAt?: boolean
+  domainProvider?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "billingStatus" | "maintenanceMode" | "maintenanceMessage" | "apiKey" | "plan" | "billingCycle" | "billingPeriod" | "startDate" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "billingStatus" | "maintenanceMode" | "maintenanceMessage" | "apiKey" | "planId" | "customPrice" | "amountPaid" | "renewalPrice" | "description" | "isBlocked" | "billingCycle" | "billingPeriod" | "startDate" | "domainExpiry" | "domainBoughtAt" | "domainProvider" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  plan?: boolean | Prisma.Client$planArgs<ExtArgs>
+  transactions?: boolean | Prisma.Client$transactionsArgs<ExtArgs>
+  _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ClientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  plan?: boolean | Prisma.Client$planArgs<ExtArgs>
+}
+export type ClientIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  plan?: boolean | Prisma.Client$planArgs<ExtArgs>
+}
 
 export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Client"
-  objects: {}
+  objects: {
+    plan: Prisma.$PlanPayload<ExtArgs> | null
+    transactions: Prisma.$TransactionPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -632,10 +1281,18 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     maintenanceMode: boolean
     maintenanceMessage: string | null
     apiKey: string
-    plan: string
+    planId: string | null
+    customPrice: runtime.Decimal
+    amountPaid: runtime.Decimal
+    renewalPrice: runtime.Decimal
+    description: string | null
+    isBlocked: boolean
     billingCycle: string
     billingPeriod: number
     startDate: Date
+    domainExpiry: Date | null
+    domainBoughtAt: Date | null
+    domainProvider: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["client"]>
@@ -1032,6 +1689,8 @@ readonly fields: ClientFieldRefs;
  */
 export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  plan<T extends Prisma.Client$planArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$planArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  transactions<T extends Prisma.Client$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1068,10 +1727,18 @@ export interface ClientFieldRefs {
   readonly maintenanceMode: Prisma.FieldRef<"Client", 'Boolean'>
   readonly maintenanceMessage: Prisma.FieldRef<"Client", 'String'>
   readonly apiKey: Prisma.FieldRef<"Client", 'String'>
-  readonly plan: Prisma.FieldRef<"Client", 'String'>
+  readonly planId: Prisma.FieldRef<"Client", 'String'>
+  readonly customPrice: Prisma.FieldRef<"Client", 'Decimal'>
+  readonly amountPaid: Prisma.FieldRef<"Client", 'Decimal'>
+  readonly renewalPrice: Prisma.FieldRef<"Client", 'Decimal'>
+  readonly description: Prisma.FieldRef<"Client", 'String'>
+  readonly isBlocked: Prisma.FieldRef<"Client", 'Boolean'>
   readonly billingCycle: Prisma.FieldRef<"Client", 'String'>
   readonly billingPeriod: Prisma.FieldRef<"Client", 'Int'>
   readonly startDate: Prisma.FieldRef<"Client", 'DateTime'>
+  readonly domainExpiry: Prisma.FieldRef<"Client", 'DateTime'>
+  readonly domainBoughtAt: Prisma.FieldRef<"Client", 'DateTime'>
+  readonly domainProvider: Prisma.FieldRef<"Client", 'String'>
   readonly createdAt: Prisma.FieldRef<"Client", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Client", 'DateTime'>
 }
@@ -1091,6 +1758,10 @@ export type ClientFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  /**
    * Filter, which Client to fetch.
    */
   where: Prisma.ClientWhereUniqueInput
@@ -1109,6 +1780,10 @@ export type ClientFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  /**
    * Filter, which Client to fetch.
    */
   where: Prisma.ClientWhereUniqueInput
@@ -1126,6 +1801,10 @@ export type ClientFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Client
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
   /**
    * Filter, which Client to fetch.
    */
@@ -1175,6 +1854,10 @@ export type ClientFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  /**
    * Filter, which Client to fetch.
    */
   where?: Prisma.ClientWhereInput
@@ -1223,6 +1906,10 @@ export type ClientFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  /**
    * Filter, which Clients to fetch.
    */
   where?: Prisma.ClientWhereInput
@@ -1266,6 +1953,10 @@ export type ClientCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  /**
    * The data needed to create a Client.
    */
   data: Prisma.XOR<Prisma.ClientCreateInput, Prisma.ClientUncheckedCreateInput>
@@ -1299,6 +1990,10 @@ export type ClientCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    */
   data: Prisma.ClientCreateManyInput | Prisma.ClientCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1313,6 +2008,10 @@ export type ClientUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Client
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
   /**
    * The data needed to update a Client.
    */
@@ -1365,6 +2064,10 @@ export type ClientUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many Clients to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1379,6 +2082,10 @@ export type ClientUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Client
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
   /**
    * The filter to search for the Client to update in case it exists.
    */
@@ -1406,6 +2113,10 @@ export type ClientDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  /**
    * Filter which Client to delete.
    */
   where: Prisma.ClientWhereUniqueInput
@@ -1426,6 +2137,49 @@ export type ClientDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Client.plan
+ */
+export type Client$planArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Plan
+   */
+  select?: Prisma.PlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Plan
+   */
+  omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  where?: Prisma.PlanWhereInput
+}
+
+/**
+ * Client.transactions
+ */
+export type Client$transactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Transaction
+   */
+  select?: Prisma.TransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Transaction
+   */
+  omit?: Prisma.TransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TransactionInclude<ExtArgs> | null
+  where?: Prisma.TransactionWhereInput
+  orderBy?: Prisma.TransactionOrderByWithRelationInput | Prisma.TransactionOrderByWithRelationInput[]
+  cursor?: Prisma.TransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TransactionScalarFieldEnum | Prisma.TransactionScalarFieldEnum[]
+}
+
+/**
  * Client without action
  */
 export type ClientDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1437,4 +2191,8 @@ export type ClientDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Client
    */
   omit?: Prisma.ClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
 }
