@@ -69,6 +69,11 @@ export default function ClientEditForm({ client, plans, transactions }: { client
                                 <ErrorMsg field="domain" />
                             </div>
                             <div>
+                                <label className="block text-sm font-medium text-secondary mb-2">Email</label>
+                                <input form="client-form" name="email" type="email" defaultValue={client.email || ''} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none" />
+                                <ErrorMsg field="email" />
+                            </div>
+                            <div>
                                 <label className="block text-sm font-medium text-secondary mb-2">Plan</label>
                                 <select form="client-form" name="planId" defaultValue={client.planId || ""} className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-foreground focus:ring-2 focus:ring-primary/20 outline-none">
                                     <option value="">No Plan</option>

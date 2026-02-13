@@ -43,6 +43,7 @@ model Showcase {
 model Client {
   id                 String        @id @default(cuid())
   name               String
+  email              String?
   domain             String        @unique
   billingStatus      BillingStatus @default(UNPAID)
   maintenanceMode    Boolean       @default(false)

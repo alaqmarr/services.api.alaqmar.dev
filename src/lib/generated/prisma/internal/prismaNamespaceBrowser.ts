@@ -110,6 +110,7 @@ export type ShowcaseScalarFieldEnum = (typeof ShowcaseScalarFieldEnum)[keyof typ
 export const ClientScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  email: 'email',
   domain: 'domain',
   billingStatus: 'billingStatus',
   maintenanceMode: 'maintenanceMode',

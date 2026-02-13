@@ -133,6 +133,29 @@ export default function CreateForm({ plans }: { plans?: any[] }) {
                     </div>
                 </div>
 
+                {/* Email */}
+                <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
+                        Email Address
+                    </label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="client@company.com"
+                        className="block w-full rounded-lg border-card-border bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2.5 px-3 placeholder-secondary"
+                        aria-describedby="email-error"
+                    />
+                    <div id="email-error" aria-live="polite" aria-atomic="true">
+                        {state.errors?.email &&
+                            state.errors.email.map((error: string) => (
+                                <p key={error} className="mt-2 text-sm text-red-600">
+                                    {error}
+                                </p>
+                            ))}
+                    </div>
+                </div>
+
                 {/* Domain */}
                 <div>
                     <label htmlFor="domain" className="block text-sm font-medium text-foreground mb-1">

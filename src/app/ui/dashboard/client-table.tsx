@@ -4,32 +4,44 @@ import toast from 'react-hot-toast';
 import { deleteClient, toggleMaintenance, toggleBlock } from '@/lib/actions';
 import Link from 'next/link';
 
+// ... imports
+import { useState, useMemo } from 'react';
+
 export default function ClientTable({
     clients,
 }: {
-    clients: Array<{
-        id: string;
-        name: string;
-        domain: string;
-        billingStatus: 'PAID' | 'UNPAID' | 'OVERDUE';
-        maintenanceMode: boolean;
-        isBlocked: boolean; // New field
-        apiKey: string;
-        plan: any; // Now a relation
-        planId: string | null;
-        customPrice: number; // New field
-        amountPaid: number; // New field
-        billingCycle: string;
-        billingPeriod: number;
-        startDate: Date;
-    }>;
+    // ... types
+    clients: any[];
 }) {
+    const [filterStatus, setFilterStatus] = useState<string>('ALL');
+    const [filterMaint, setFilterMaint] = useState<string>('ALL');
+    const [searchQuery, setSearchQuery] = useState('');
+
     const copyToClipboard = (text: string, message: string) => {
         navigator.clipboard.writeText(text);
         toast.success(message);
     };
 
+    const filteredClients = useMemo(() => {
+        return clients.filter(client => {
+            const matchesStatus = filterStatus === 'ALL' || client.billingStatus === filterStatus;
+            const matchesMaint = filterMaint === 'ALL' || (filterMaint === 'TRUE' ? client.maintenanceMode : !client.maintenanceMode);
+            const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                client.domain.toLowerCase().includes(searchQuery.toLowerCase());
+
+            return matchesStatus && matchesMaint && matchesSearch;
+        });
+    }, [clients, filterStatus, filterMaint, searchQuery]);
+
+    const stats = {
+        total: clients.length,
+        paid: clients.filter(c => c.billingStatus === 'PAID').length,
+        unpaid: clients.filter(c => c.billingStatus === 'UNPAID').length,
+        overdue: clients.filter(c => c.billingStatus === 'OVERDUE').length,
+    };
+
     if (!clients || clients.length === 0) {
+        // ... empty state
         return (
             <div className="flex flex-col items-center justify-center p-12 text-center rounded-3xl border-2 border-dashed border-card-border bg-card-bg/50">
                 <div className="mx-auto h-16 w-16 text-primary mb-4 bg-primary/10 rounded-full flex items-center justify-center text-2xl">📂</div>
@@ -40,10 +52,51 @@ export default function ClientTable({
     }
 
     return (
-        <div className="w-full">
+        <div className="w-full space-y-6">
+            {/* Filters Bar */}
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-card-bg p-4 rounded-2xl border border-card-border shadow-sm">
+                <div className="relative w-full md:w-64">
+                    <input
+                        type="text"
+                        placeholder="Search clients..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 rounded-xl bg-background border border-card-border focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                    />
+                    <svg className="w-4 h-4 text-secondary absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+
+                <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+                    <select
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                        className="bg-background border border-card-border rounded-xl px-3 py-2 text-sm text-secondary focus:ring-2 focus:ring-primary/20 outline-none"
+                    >
+                        <option value="ALL">All Status</option>
+                        <option value="PAID">Paid ({stats.paid})</option>
+                        <option value="UNPAID">Unpaid ({stats.unpaid})</option>
+                        <option value="OVERDUE">Overdue ({stats.overdue})</option>
+                    </select>
+
+                    <select
+                        value={filterMaint}
+                        onChange={(e) => setFilterMaint(e.target.value)}
+                        className="bg-background border border-card-border rounded-xl px-3 py-2 text-sm text-secondary focus:ring-2 focus:ring-primary/20 outline-none"
+                    >
+                        <option value="ALL">All Modes</option>
+                        <option value="TRUE">Maintenance On</option>
+                        <option value="FALSE">Maintenance Off</option>
+                    </select>
+
+                    <div className="bg-background border border-card-border rounded-xl px-3 py-2 text-sm font-medium text-foreground whitespace-nowrap">
+                        Total: {filteredClients.length}
+                    </div>
+                </div>
+            </div>
+
             {/* Mobile View (Cards) */}
             <div className="grid grid-cols-1 gap-6 md:hidden">
-                {clients?.map((client) => {
+                {filteredClients.map((client) => {
                     const dueAmount = client.customPrice - client.amountPaid;
                     return (
                         <div key={client.id} className="relative overflow-hidden rounded-3xl border border-card-border bg-card-bg p-6 shadow-sm backdrop-blur-md">
@@ -168,7 +221,7 @@ export default function ClientTable({
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-card-border">
-                        {clients?.map((client) => {
+                        {filteredClients.map((client) => {
                             const dueAmount = client.customPrice - client.amountPaid;
                             return (
                                 <tr key={client.id} className="group hover:bg-primary/5 transition-colors">

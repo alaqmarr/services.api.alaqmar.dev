@@ -43,6 +43,7 @@ export type ClientSumAggregateOutputType = {
 export type ClientMinAggregateOutputType = {
   id: string | null
   name: string | null
+  email: string | null
   domain: string | null
   billingStatus: $Enums.BillingStatus | null
   maintenanceMode: boolean | null
@@ -67,6 +68,7 @@ export type ClientMinAggregateOutputType = {
 export type ClientMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  email: string | null
   domain: string | null
   billingStatus: $Enums.BillingStatus | null
   maintenanceMode: boolean | null
@@ -91,6 +93,7 @@ export type ClientMaxAggregateOutputType = {
 export type ClientCountAggregateOutputType = {
   id: number
   name: number
+  email: number
   domain: number
   billingStatus: number
   maintenanceMode: number
@@ -131,6 +134,7 @@ export type ClientSumAggregateInputType = {
 export type ClientMinAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   domain?: true
   billingStatus?: true
   maintenanceMode?: true
@@ -155,6 +159,7 @@ export type ClientMinAggregateInputType = {
 export type ClientMaxAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   domain?: true
   billingStatus?: true
   maintenanceMode?: true
@@ -179,6 +184,7 @@ export type ClientMaxAggregateInputType = {
 export type ClientCountAggregateInputType = {
   id?: true
   name?: true
+  email?: true
   domain?: true
   billingStatus?: true
   maintenanceMode?: true
@@ -290,6 +296,7 @@ export type ClientGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type ClientGroupByOutputType = {
   id: string
   name: string
+  email: string | null
   domain: string
   billingStatus: $Enums.BillingStatus
   maintenanceMode: boolean
@@ -337,6 +344,7 @@ export type ClientWhereInput = {
   NOT?: Prisma.ClientWhereInput | Prisma.ClientWhereInput[]
   id?: Prisma.StringFilter<"Client"> | string
   name?: Prisma.StringFilter<"Client"> | string
+  email?: Prisma.StringNullableFilter<"Client"> | string | null
   domain?: Prisma.StringFilter<"Client"> | string
   billingStatus?: Prisma.EnumBillingStatusFilter<"Client"> | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFilter<"Client"> | boolean
@@ -363,6 +371,7 @@ export type ClientWhereInput = {
 export type ClientOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
   domain?: Prisma.SortOrder
   billingStatus?: Prisma.SortOrder
   maintenanceMode?: Prisma.SortOrder
@@ -394,6 +403,7 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ClientWhereInput[]
   NOT?: Prisma.ClientWhereInput | Prisma.ClientWhereInput[]
   name?: Prisma.StringFilter<"Client"> | string
+  email?: Prisma.StringNullableFilter<"Client"> | string | null
   billingStatus?: Prisma.EnumBillingStatusFilter<"Client"> | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFilter<"Client"> | boolean
   maintenanceMessage?: Prisma.StringNullableFilter<"Client"> | string | null
@@ -418,6 +428,7 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
 export type ClientOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
   domain?: Prisma.SortOrder
   billingStatus?: Prisma.SortOrder
   maintenanceMode?: Prisma.SortOrder
@@ -450,6 +461,7 @@ export type ClientScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ClientScalarWhereWithAggregatesInput | Prisma.ClientScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Client"> | string
   name?: Prisma.StringWithAggregatesFilter<"Client"> | string
+  email?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   domain?: Prisma.StringWithAggregatesFilter<"Client"> | string
   billingStatus?: Prisma.EnumBillingStatusWithAggregatesFilter<"Client"> | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolWithAggregatesFilter<"Client"> | boolean
@@ -474,6 +486,7 @@ export type ClientScalarWhereWithAggregatesInput = {
 export type ClientCreateInput = {
   id?: string
   name: string
+  email?: string | null
   domain: string
   billingStatus?: $Enums.BillingStatus
   maintenanceMode?: boolean
@@ -499,6 +512,7 @@ export type ClientCreateInput = {
 export type ClientUncheckedCreateInput = {
   id?: string
   name: string
+  email?: string | null
   domain: string
   billingStatus?: $Enums.BillingStatus
   maintenanceMode?: boolean
@@ -524,6 +538,7 @@ export type ClientUncheckedCreateInput = {
 export type ClientUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -549,6 +564,7 @@ export type ClientUpdateInput = {
 export type ClientUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -574,6 +590,7 @@ export type ClientUncheckedUpdateInput = {
 export type ClientCreateManyInput = {
   id?: string
   name: string
+  email?: string | null
   domain: string
   billingStatus?: $Enums.BillingStatus
   maintenanceMode?: boolean
@@ -598,6 +615,7 @@ export type ClientCreateManyInput = {
 export type ClientUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -621,6 +639,7 @@ export type ClientUpdateManyMutationInput = {
 export type ClientUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -655,6 +674,7 @@ export type ClientOrderByRelationAggregateInput = {
 export type ClientCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   domain?: Prisma.SortOrder
   billingStatus?: Prisma.SortOrder
   maintenanceMode?: Prisma.SortOrder
@@ -686,6 +706,7 @@ export type ClientAvgOrderByAggregateInput = {
 export type ClientMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   domain?: Prisma.SortOrder
   billingStatus?: Prisma.SortOrder
   maintenanceMode?: Prisma.SortOrder
@@ -710,6 +731,7 @@ export type ClientMaxOrderByAggregateInput = {
 export type ClientMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  email?: Prisma.SortOrder
   domain?: Prisma.SortOrder
   billingStatus?: Prisma.SortOrder
   maintenanceMode?: Prisma.SortOrder
@@ -810,6 +832,7 @@ export type ClientUpdateOneRequiredWithoutTransactionsNestedInput = {
 export type ClientCreateWithoutPlanInput = {
   id?: string
   name: string
+  email?: string | null
   domain: string
   billingStatus?: $Enums.BillingStatus
   maintenanceMode?: boolean
@@ -834,6 +857,7 @@ export type ClientCreateWithoutPlanInput = {
 export type ClientUncheckedCreateWithoutPlanInput = {
   id?: string
   name: string
+  email?: string | null
   domain: string
   billingStatus?: $Enums.BillingStatus
   maintenanceMode?: boolean
@@ -887,6 +911,7 @@ export type ClientScalarWhereInput = {
   NOT?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
   id?: Prisma.StringFilter<"Client"> | string
   name?: Prisma.StringFilter<"Client"> | string
+  email?: Prisma.StringNullableFilter<"Client"> | string | null
   domain?: Prisma.StringFilter<"Client"> | string
   billingStatus?: Prisma.EnumBillingStatusFilter<"Client"> | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFilter<"Client"> | boolean
@@ -911,6 +936,7 @@ export type ClientScalarWhereInput = {
 export type ClientCreateWithoutTransactionsInput = {
   id?: string
   name: string
+  email?: string | null
   domain: string
   billingStatus?: $Enums.BillingStatus
   maintenanceMode?: boolean
@@ -935,6 +961,7 @@ export type ClientCreateWithoutTransactionsInput = {
 export type ClientUncheckedCreateWithoutTransactionsInput = {
   id?: string
   name: string
+  email?: string | null
   domain: string
   billingStatus?: $Enums.BillingStatus
   maintenanceMode?: boolean
@@ -975,6 +1002,7 @@ export type ClientUpdateToOneWithWhereWithoutTransactionsInput = {
 export type ClientUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -999,6 +1027,7 @@ export type ClientUpdateWithoutTransactionsInput = {
 export type ClientUncheckedUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1023,6 +1052,7 @@ export type ClientUncheckedUpdateWithoutTransactionsInput = {
 export type ClientCreateManyPlanInput = {
   id?: string
   name: string
+  email?: string | null
   domain: string
   billingStatus?: $Enums.BillingStatus
   maintenanceMode?: boolean
@@ -1046,6 +1076,7 @@ export type ClientCreateManyPlanInput = {
 export type ClientUpdateWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1070,6 +1101,7 @@ export type ClientUpdateWithoutPlanInput = {
 export type ClientUncheckedUpdateWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1094,6 +1126,7 @@ export type ClientUncheckedUpdateWithoutPlanInput = {
 export type ClientUncheckedUpdateManyWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   domain?: Prisma.StringFieldUpdateOperationsInput | string
   billingStatus?: Prisma.EnumBillingStatusFieldUpdateOperationsInput | $Enums.BillingStatus
   maintenanceMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1148,6 +1181,7 @@ export type ClientCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.T
 export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   domain?: boolean
   billingStatus?: boolean
   maintenanceMode?: boolean
@@ -1175,6 +1209,7 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   domain?: boolean
   billingStatus?: boolean
   maintenanceMode?: boolean
@@ -1200,6 +1235,7 @@ export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  email?: boolean
   domain?: boolean
   billingStatus?: boolean
   maintenanceMode?: boolean
@@ -1225,6 +1261,7 @@ export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type ClientSelectScalar = {
   id?: boolean
   name?: boolean
+  email?: boolean
   domain?: boolean
   billingStatus?: boolean
   maintenanceMode?: boolean
@@ -1246,7 +1283,7 @@ export type ClientSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "billingStatus" | "maintenanceMode" | "maintenanceMessage" | "apiKey" | "planId" | "customPrice" | "amountPaid" | "renewalPrice" | "description" | "isBlocked" | "billingCycle" | "billingPeriod" | "startDate" | "domainExpiry" | "domainBoughtAt" | "domainProvider" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "domain" | "billingStatus" | "maintenanceMode" | "maintenanceMessage" | "apiKey" | "planId" | "customPrice" | "amountPaid" | "renewalPrice" | "description" | "isBlocked" | "billingCycle" | "billingPeriod" | "startDate" | "domainExpiry" | "domainBoughtAt" | "domainProvider" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   plan?: boolean | Prisma.Client$planArgs<ExtArgs>
   transactions?: boolean | Prisma.Client$transactionsArgs<ExtArgs>
@@ -1268,6 +1305,7 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    email: string | null
     domain: string
     billingStatus: $Enums.BillingStatus
     maintenanceMode: boolean
@@ -1714,6 +1752,7 @@ export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.T
 export interface ClientFieldRefs {
   readonly id: Prisma.FieldRef<"Client", 'String'>
   readonly name: Prisma.FieldRef<"Client", 'String'>
+  readonly email: Prisma.FieldRef<"Client", 'String'>
   readonly domain: Prisma.FieldRef<"Client", 'String'>
   readonly billingStatus: Prisma.FieldRef<"Client", 'BillingStatus'>
   readonly maintenanceMode: Prisma.FieldRef<"Client", 'Boolean'>

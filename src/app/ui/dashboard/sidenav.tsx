@@ -1,53 +1,12 @@
-import { ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 export default function SideNav() {
-    return (
-        <div className="flex h-full flex-col px-4 py-6">
-            <Link
-                className="mb-6 flex h-32 items-end justify-start rounded-3xl bg-gradient-to-br from-[#d4a373] to-[#bc8a5f] p-6 shadow-xl shadow-[#d4a373]/20 group relative overflow-hidden transition-transform hover:scale-[1.02]"
-                href="/"
-            >
-                <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-white/20 blur-2xl"></div>
-                <div className="w-full text-[#fdfcf8] relative z-10">
-                    <h2 className="text-xs font-medium opacity-90 uppercase tracking-widest text-[#fdfcf8]/80">Workspace</h2>
-                    <h1 className="text-2xl font-bold font-sans tracking-tight mt-1">Alaqmar</h1>
-                </div>
-            </Link>
-
-            <div className="flex grow flex-col justify-between space-y-2">
-                <div className="space-y-2">
-                    <div className="px-3 py-2">
-                        <h3 className="text-xs font-semibold text-primary uppercase tracking-wider">Menu</h3>
-                    </div>
-                    <NavLinks />
-                </div>
-
-                <form
-                    action={async () => {
-                        'use server';
-                        const { signOut } = await import('@/auth');
-                        await signOut();
-                    }}
-                >
-                    <button className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-sm font-medium text-secondary hover:bg-card-bg hover:text-foreground transition-all duration-200 group">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-transparent border border-card-border group-hover:border-red-200 dark:group-hover:border-red-900/30 text-secondary group-hover:text-red-500 transition-colors">
-                            <PowerIcon className="w-5" />
-                        </div>
-                        <div className="hidden md:block">Sign Out</div>
-                    </button>
-                </form>
-            </div>
-        </div>
-    );
-}
-
-function NavLinks() {
+    // ... lines 5-46
     const links = [
         { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
         { name: 'Showcase', href: '/dashboard/showcase', icon: PresentationChartBarIcon },
         { name: 'Plans', href: '/dashboard/plans', icon: QueueListIcon },
-        { name: 'Logs', href: '/dashboard/logs', icon: ClipboardDocumentListIcon }, // Changed icon to ClipboardDocumentListIcon
+        { name: 'Logs', href: '/dashboard/logs', icon: DocumentTextIcon }, // Using DocumentTextIcon
         { name: 'Add Admin', href: '/dashboard/users/create', icon: UserPlusIcon },
         { name: 'Docs', href: '/docs', icon: DocumentTextIcon },
         { name: 'Setup', href: '/setup', icon: CogIcon },

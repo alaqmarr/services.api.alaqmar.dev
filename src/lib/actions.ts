@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { BillingStatus, Prisma } from "@/lib/generated/prisma/client";
 import { logAction } from "@/lib/audit";
+import { sendEmail } from "@/lib/email";
 
 export type State = {
   errors?: {
@@ -53,7 +54,11 @@ const FormSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
   domain: z.string().min(1, "Domain is required"),
-  billingStatus: z.enum(["PAID", "UNPAID", "OVERDUE"]),
+  email: z.string().email("Invalid email address").optional().or(z.literal("")),
+  billingStatus: z
+    .enum(["PAID", "UNPAID", "OVERDUE"])
+    .optional()
+    .or(z.literal("")),
   maintenanceMode: z.boolean(),
   maintenanceMessage: z.string().optional(),
   planId: z.string().optional(),
@@ -108,6 +113,7 @@ export async function createClient(
   const {
     name,
     domain,
+    email,
     billingStatus,
     planId,
     customPrice,
@@ -127,6 +133,7 @@ export async function createClient(
       data: {
         name,
         domain,
+        email: email || null,
         billingStatus: billingStatus as BillingStatus,
         maintenanceMode: false,
         planId: planId || null,
@@ -144,6 +151,15 @@ export async function createClient(
       name: client.name,
       domain: client.domain,
     });
+
+    // Send Welcome Email
+    if (client.email) {
+      await sendEmail({
+        to: client.email,
+        subject: "Welcome to Alaqmar Services",
+        html: `<h1>Welcome ${client.name}!</h1><p>Your account has been created. You can access your portal here: <a href="${process.env.NEXT_PUBLIC_APP_URL}/portal/${client.id}">Client Portal</a></p>`,
+      });
+    }
   } catch (error) {
     return {
       message: "Database Error: Failed to Create Client.",
@@ -162,6 +178,7 @@ export async function updateClient(
   const validatedFields = UpdateClient.safeParse({
     id: id,
     name: formData.get("name"),
+    email: formData.get("email"),
     domain: formData.get("domain"),
     billingStatus: formData.get("billingStatus"),
     planId: formData.get("planId"),
@@ -187,6 +204,7 @@ export async function updateClient(
   const {
     name,
     domain,
+    email,
     billingStatus,
     planId,
     customPrice,
@@ -209,6 +227,7 @@ export async function updateClient(
       data: {
         name,
         domain,
+        email: email || null,
         billingStatus: billingStatus as BillingStatus,
         planId: planId || null,
         customPrice: new Prisma.Decimal(customPrice || 0),
@@ -271,6 +290,15 @@ export async function addTransaction(
       type,
     });
 
+    // Send Receipt Email
+    if (client.email) {
+      await sendEmail({
+        to: client.email,
+        subject: "Payment Receipt - Alaqmar Services",
+        html: `<h1>Payment Received</h1><p>Thank you for your payment of <strong>₹${amount}</strong>.</p><p>Transaction ID: ${transaction.id}</p>`,
+      });
+    }
+
     revalidatePath(`/dashboard/clients/${clientId}`);
     return { success: true, message: "Transaction added successfully." };
   } catch (error) {
@@ -316,6 +344,15 @@ export async function renewClient(id: string) {
       name: client.name,
       domain: client.domain,
     });
+
+    // Send Renewal Email
+    if (client.email) {
+      await sendEmail({
+        to: client.email,
+        subject: "Subscription Renewed - Alaqmar Services",
+        html: `<h1>Subscription Renewed</h1><p>Your plan has been renewed. Next payment is due on ${nextStartDate.toDateString()}.</p>`,
+      });
+    }
 
     revalidatePath(`/dashboard/clients/${id}`);
     return {
