@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Plan: 'Plan',
+  Showcase: 'Showcase',
   Client: 'Client',
   Transaction: 'Transaction',
   User: 'User'
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "plan" | "client" | "transaction" | "user"
+    modelProps: "plan" | "showcase" | "client" | "transaction" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +479,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PlanCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PlanCountAggregateOutputType> | number
+        }
+      }
+    }
+    Showcase: {
+      payload: Prisma.$ShowcasePayload<ExtArgs>
+      fields: Prisma.ShowcaseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShowcaseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShowcaseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>
+        }
+        findFirst: {
+          args: Prisma.ShowcaseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShowcaseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>
+        }
+        findMany: {
+          args: Prisma.ShowcaseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>[]
+        }
+        create: {
+          args: Prisma.ShowcaseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>
+        }
+        createMany: {
+          args: Prisma.ShowcaseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ShowcaseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>[]
+        }
+        delete: {
+          args: Prisma.ShowcaseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>
+        }
+        update: {
+          args: Prisma.ShowcaseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>
+        }
+        deleteMany: {
+          args: Prisma.ShowcaseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShowcaseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ShowcaseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>[]
+        }
+        upsert: {
+          args: Prisma.ShowcaseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePayload>
+        }
+        aggregate: {
+          args: Prisma.ShowcaseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShowcase>
+        }
+        groupBy: {
+          args: Prisma.ShowcaseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShowcaseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShowcaseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShowcaseCountAggregateOutputType> | number
         }
       }
     }
@@ -748,11 +823,30 @@ export const PlanScalarFieldEnum = {
   price: 'price',
   validity: 'validity',
   durationUnit: 'durationUnit',
+  inclusions: 'inclusions',
+  exclusions: 'exclusions',
+  displayOnPortfolio: 'displayOnPortfolio',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
+
+
+export const ShowcaseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  siteUrl: 'siteUrl',
+  repoUrl: 'repoUrl',
+  tags: 'tags',
+  isFeatured: 'isFeatured',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShowcaseScalarFieldEnum = (typeof ShowcaseScalarFieldEnum)[keyof typeof ShowcaseScalarFieldEnum]
 
 
 export const ClientScalarFieldEnum = {
@@ -882,6 +976,13 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -906,13 +1007,6 @@ export type EnumBillingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'BillingStatus[]'
  */
 export type ListEnumBillingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1039,6 +1133,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   plan?: Prisma.PlanOmit
+  showcase?: Prisma.ShowcaseOmit
   client?: Prisma.ClientOmit
   transaction?: Prisma.TransactionOmit
   user?: Prisma.UserOmit

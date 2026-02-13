@@ -42,6 +42,7 @@ export type PlanMinAggregateOutputType = {
   price: runtime.Decimal | null
   validity: number | null
   durationUnit: string | null
+  displayOnPortfolio: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +53,7 @@ export type PlanMaxAggregateOutputType = {
   price: runtime.Decimal | null
   validity: number | null
   durationUnit: string | null
+  displayOnPortfolio: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,6 +64,9 @@ export type PlanCountAggregateOutputType = {
   price: number
   validity: number
   durationUnit: number
+  inclusions: number
+  exclusions: number
+  displayOnPortfolio: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -84,6 +89,7 @@ export type PlanMinAggregateInputType = {
   price?: true
   validity?: true
   durationUnit?: true
+  displayOnPortfolio?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +100,7 @@ export type PlanMaxAggregateInputType = {
   price?: true
   validity?: true
   durationUnit?: true
+  displayOnPortfolio?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -104,6 +111,9 @@ export type PlanCountAggregateInputType = {
   price?: true
   validity?: true
   durationUnit?: true
+  inclusions?: true
+  exclusions?: true
+  displayOnPortfolio?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -201,6 +211,9 @@ export type PlanGroupByOutputType = {
   price: runtime.Decimal
   validity: number
   durationUnit: string
+  inclusions: string[]
+  exclusions: string[]
+  displayOnPortfolio: boolean
   createdAt: Date
   updatedAt: Date
   _count: PlanCountAggregateOutputType | null
@@ -234,6 +247,9 @@ export type PlanWhereInput = {
   price?: Prisma.DecimalFilter<"Plan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntFilter<"Plan"> | number
   durationUnit?: Prisma.StringFilter<"Plan"> | string
+  inclusions?: Prisma.StringNullableListFilter<"Plan">
+  exclusions?: Prisma.StringNullableListFilter<"Plan">
+  displayOnPortfolio?: Prisma.BoolFilter<"Plan"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   clients?: Prisma.ClientListRelationFilter
@@ -245,6 +261,9 @@ export type PlanOrderByWithRelationInput = {
   price?: Prisma.SortOrder
   validity?: Prisma.SortOrder
   durationUnit?: Prisma.SortOrder
+  inclusions?: Prisma.SortOrder
+  exclusions?: Prisma.SortOrder
+  displayOnPortfolio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   clients?: Prisma.ClientOrderByRelationAggregateInput
@@ -259,6 +278,9 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   price?: Prisma.DecimalFilter<"Plan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntFilter<"Plan"> | number
   durationUnit?: Prisma.StringFilter<"Plan"> | string
+  inclusions?: Prisma.StringNullableListFilter<"Plan">
+  exclusions?: Prisma.StringNullableListFilter<"Plan">
+  displayOnPortfolio?: Prisma.BoolFilter<"Plan"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   clients?: Prisma.ClientListRelationFilter
@@ -270,6 +292,9 @@ export type PlanOrderByWithAggregationInput = {
   price?: Prisma.SortOrder
   validity?: Prisma.SortOrder
   durationUnit?: Prisma.SortOrder
+  inclusions?: Prisma.SortOrder
+  exclusions?: Prisma.SortOrder
+  displayOnPortfolio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PlanCountOrderByAggregateInput
@@ -288,6 +313,9 @@ export type PlanScalarWhereWithAggregatesInput = {
   price?: Prisma.DecimalWithAggregatesFilter<"Plan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntWithAggregatesFilter<"Plan"> | number
   durationUnit?: Prisma.StringWithAggregatesFilter<"Plan"> | string
+  inclusions?: Prisma.StringNullableListFilter<"Plan">
+  exclusions?: Prisma.StringNullableListFilter<"Plan">
+  displayOnPortfolio?: Prisma.BoolWithAggregatesFilter<"Plan"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Plan"> | Date | string
 }
@@ -298,6 +326,9 @@ export type PlanCreateInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: number
   durationUnit?: string
+  inclusions?: Prisma.PlanCreateinclusionsInput | string[]
+  exclusions?: Prisma.PlanCreateexclusionsInput | string[]
+  displayOnPortfolio?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   clients?: Prisma.ClientCreateNestedManyWithoutPlanInput
@@ -309,6 +340,9 @@ export type PlanUncheckedCreateInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: number
   durationUnit?: string
+  inclusions?: Prisma.PlanCreateinclusionsInput | string[]
+  exclusions?: Prisma.PlanCreateexclusionsInput | string[]
+  displayOnPortfolio?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutPlanInput
@@ -320,6 +354,9 @@ export type PlanUpdateInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntFieldUpdateOperationsInput | number
   durationUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  inclusions?: Prisma.PlanUpdateinclusionsInput | string[]
+  exclusions?: Prisma.PlanUpdateexclusionsInput | string[]
+  displayOnPortfolio?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clients?: Prisma.ClientUpdateManyWithoutPlanNestedInput
@@ -331,6 +368,9 @@ export type PlanUncheckedUpdateInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntFieldUpdateOperationsInput | number
   durationUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  inclusions?: Prisma.PlanUpdateinclusionsInput | string[]
+  exclusions?: Prisma.PlanUpdateexclusionsInput | string[]
+  displayOnPortfolio?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clients?: Prisma.ClientUncheckedUpdateManyWithoutPlanNestedInput
@@ -342,6 +382,9 @@ export type PlanCreateManyInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: number
   durationUnit?: string
+  inclusions?: Prisma.PlanCreateinclusionsInput | string[]
+  exclusions?: Prisma.PlanCreateexclusionsInput | string[]
+  displayOnPortfolio?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -352,6 +395,9 @@ export type PlanUpdateManyMutationInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntFieldUpdateOperationsInput | number
   durationUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  inclusions?: Prisma.PlanUpdateinclusionsInput | string[]
+  exclusions?: Prisma.PlanUpdateexclusionsInput | string[]
+  displayOnPortfolio?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -362,8 +408,19 @@ export type PlanUncheckedUpdateManyInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntFieldUpdateOperationsInput | number
   durationUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  inclusions?: Prisma.PlanUpdateinclusionsInput | string[]
+  exclusions?: Prisma.PlanUpdateexclusionsInput | string[]
+  displayOnPortfolio?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type PlanCountOrderByAggregateInput = {
@@ -372,6 +429,9 @@ export type PlanCountOrderByAggregateInput = {
   price?: Prisma.SortOrder
   validity?: Prisma.SortOrder
   durationUnit?: Prisma.SortOrder
+  inclusions?: Prisma.SortOrder
+  exclusions?: Prisma.SortOrder
+  displayOnPortfolio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -387,6 +447,7 @@ export type PlanMaxOrderByAggregateInput = {
   price?: Prisma.SortOrder
   validity?: Prisma.SortOrder
   durationUnit?: Prisma.SortOrder
+  displayOnPortfolio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -397,6 +458,7 @@ export type PlanMinOrderByAggregateInput = {
   price?: Prisma.SortOrder
   validity?: Prisma.SortOrder
   durationUnit?: Prisma.SortOrder
+  displayOnPortfolio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -409,6 +471,14 @@ export type PlanSumOrderByAggregateInput = {
 export type PlanNullableScalarRelationFilter = {
   is?: Prisma.PlanWhereInput | null
   isNot?: Prisma.PlanWhereInput | null
+}
+
+export type PlanCreateinclusionsInput = {
+  set: string[]
+}
+
+export type PlanCreateexclusionsInput = {
+  set: string[]
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -429,6 +499,20 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type PlanUpdateinclusionsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type PlanUpdateexclusionsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -457,6 +541,9 @@ export type PlanCreateWithoutClientsInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: number
   durationUnit?: string
+  inclusions?: Prisma.PlanCreateinclusionsInput | string[]
+  exclusions?: Prisma.PlanCreateexclusionsInput | string[]
+  displayOnPortfolio?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -467,6 +554,9 @@ export type PlanUncheckedCreateWithoutClientsInput = {
   price?: runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: number
   durationUnit?: string
+  inclusions?: Prisma.PlanCreateinclusionsInput | string[]
+  exclusions?: Prisma.PlanCreateexclusionsInput | string[]
+  displayOnPortfolio?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -493,6 +583,9 @@ export type PlanUpdateWithoutClientsInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntFieldUpdateOperationsInput | number
   durationUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  inclusions?: Prisma.PlanUpdateinclusionsInput | string[]
+  exclusions?: Prisma.PlanUpdateexclusionsInput | string[]
+  displayOnPortfolio?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -503,6 +596,9 @@ export type PlanUncheckedUpdateWithoutClientsInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   validity?: Prisma.IntFieldUpdateOperationsInput | number
   durationUnit?: Prisma.StringFieldUpdateOperationsInput | string
+  inclusions?: Prisma.PlanUpdateinclusionsInput | string[]
+  exclusions?: Prisma.PlanUpdateexclusionsInput | string[]
+  displayOnPortfolio?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -544,6 +640,9 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   price?: boolean
   validity?: boolean
   durationUnit?: boolean
+  inclusions?: boolean
+  exclusions?: boolean
+  displayOnPortfolio?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   clients?: boolean | Prisma.Plan$clientsArgs<ExtArgs>
@@ -556,6 +655,9 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   price?: boolean
   validity?: boolean
   durationUnit?: boolean
+  inclusions?: boolean
+  exclusions?: boolean
+  displayOnPortfolio?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["plan"]>
@@ -566,6 +668,9 @@ export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   price?: boolean
   validity?: boolean
   durationUnit?: boolean
+  inclusions?: boolean
+  exclusions?: boolean
+  displayOnPortfolio?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["plan"]>
@@ -576,11 +681,14 @@ export type PlanSelectScalar = {
   price?: boolean
   validity?: boolean
   durationUnit?: boolean
+  inclusions?: boolean
+  exclusions?: boolean
+  displayOnPortfolio?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "price" | "validity" | "durationUnit" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
+export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "price" | "validity" | "durationUnit" | "inclusions" | "exclusions" | "displayOnPortfolio" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
 export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   clients?: boolean | Prisma.Plan$clientsArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
@@ -599,6 +707,9 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     price: runtime.Decimal
     validity: number
     durationUnit: string
+    inclusions: string[]
+    exclusions: string[]
+    displayOnPortfolio: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["plan"]>
@@ -1030,6 +1141,9 @@ export interface PlanFieldRefs {
   readonly price: Prisma.FieldRef<"Plan", 'Decimal'>
   readonly validity: Prisma.FieldRef<"Plan", 'Int'>
   readonly durationUnit: Prisma.FieldRef<"Plan", 'String'>
+  readonly inclusions: Prisma.FieldRef<"Plan", 'String[]'>
+  readonly exclusions: Prisma.FieldRef<"Plan", 'String[]'>
+  readonly displayOnPortfolio: Prisma.FieldRef<"Plan", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Plan", 'DateTime'>
 }

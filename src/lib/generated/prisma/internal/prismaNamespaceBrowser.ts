@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Plan: 'Plan',
+  Showcase: 'Showcase',
   Client: 'Client',
   Transaction: 'Transaction',
   User: 'User'
@@ -79,11 +80,30 @@ export const PlanScalarFieldEnum = {
   price: 'price',
   validity: 'validity',
   durationUnit: 'durationUnit',
+  inclusions: 'inclusions',
+  exclusions: 'exclusions',
+  displayOnPortfolio: 'displayOnPortfolio',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
+
+
+export const ShowcaseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  siteUrl: 'siteUrl',
+  repoUrl: 'repoUrl',
+  tags: 'tags',
+  isFeatured: 'isFeatured',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShowcaseScalarFieldEnum = (typeof ShowcaseScalarFieldEnum)[keyof typeof ShowcaseScalarFieldEnum]
 
 
 export const ClientScalarFieldEnum = {

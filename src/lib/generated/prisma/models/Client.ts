@@ -789,14 +789,6 @@ export type EnumBillingStatusFieldUpdateOperationsInput = {
   set?: $Enums.BillingStatus
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }

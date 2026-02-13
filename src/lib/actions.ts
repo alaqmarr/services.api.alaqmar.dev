@@ -430,3 +430,140 @@ export async function createUser(
     };
   }
 }
+
+export async function createPlan(
+  prevState: State | undefined,
+  formData: FormData,
+): Promise<State> {
+  const validatedFields = z
+    .object({
+      name: z.string().min(1, "Name is required"),
+      price: z.string().min(1, "Price is required"),
+      validity: z.string().min(1, "Validity is required"),
+      inclusions: z.string().optional(),
+      exclusions: z.string().optional(),
+      displayOnPortfolio: z.string().optional(), // Checkbox sends "on" or undefined
+    })
+    .safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors as State["errors"],
+      message: "Missing Fields. Failed to Create Plan.",
+    };
+  }
+
+  const { name, price, validity, inclusions, exclusions, displayOnPortfolio } =
+    validatedFields.data;
+
+  // Split by newline and filter empty strings
+  const inclusionList = inclusions
+    ? inclusions
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+  const exclusionList = exclusions
+    ? exclusions
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+
+  try {
+    await prisma.plan.create({
+      data: {
+        name,
+        price: new Prisma.Decimal(price),
+        validity: parseInt(validity),
+        inclusions: inclusionList,
+        exclusions: exclusionList,
+        displayOnPortfolio: displayOnPortfolio === "on",
+        durationUnit: "MONTHLY",
+      },
+    });
+    revalidatePath("/dashboard/plans");
+    revalidatePath("/dashboard");
+    return { success: true, message: "Plan created successfully." };
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Create Plan.",
+    };
+  }
+}
+
+export async function deletePlan(id: string) {
+  try {
+    await prisma.plan.delete({
+      where: { id },
+    });
+    revalidatePath("/dashboard/plans");
+    revalidatePath("/dashboard");
+    return { success: true, message: "Plan deleted successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to delete plan." };
+  }
+}
+export async function createProject(
+  prevState: State | undefined,
+  formData: FormData,
+): Promise<State> {
+  const validatedFields = z
+    .object({
+      title: z.string().min(1, "Title is required"),
+      description: z.string().min(1, "Description is required"),
+      imageUrl: z.string().optional(),
+      siteUrl: z.string().optional(),
+      repoUrl: z.string().optional(),
+      tags: z.string().optional(), // Comma separated
+    })
+    .safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors as State["errors"],
+      message: "Missing Fields. Failed to Create Project.",
+    };
+  }
+
+  const { title, description, imageUrl, siteUrl, repoUrl, tags } =
+    validatedFields.data;
+
+  const tagList = tags
+    ? tags
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+
+  try {
+    await prisma.showcase.create({
+      data: {
+        title,
+        description,
+        imageUrl: imageUrl || null,
+        siteUrl: siteUrl || null,
+        repoUrl: repoUrl || null,
+        tags: tagList,
+      },
+    });
+    revalidatePath("/dashboard/showcase");
+    return { success: true, message: "Project created successfully." };
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to Create Project.",
+    };
+  }
+}
+
+export async function deleteProject(id: string) {
+  try {
+    await prisma.showcase.delete({
+      where: { id },
+    });
+    revalidatePath("/dashboard/showcase");
+    return { success: true, message: "Project deleted successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to delete project." };
+  }
+}
