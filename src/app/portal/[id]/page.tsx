@@ -4,9 +4,10 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ClientPortalPage({ params }: { params: { id: string } }) {
+export default async function ClientPortalPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const client = await prisma.client.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: {
             plan: true,
             transactions: {
@@ -51,10 +52,10 @@ export default async function ClientPortalPage({ params }: { params: { id: strin
                                     </a>
                                 </div>
                                 <div className={`px-4 py-2 rounded-full border ${client.isBlocked
-                                        ? 'bg-red-50 border-red-200 text-red-600'
-                                        : dueAmount > 0
-                                            ? 'bg-yellow-50 border-yellow-200 text-yellow-600'
-                                            : 'bg-green-50 border-green-200 text-green-600'
+                                    ? 'bg-red-50 border-red-200 text-red-600'
+                                    : dueAmount > 0
+                                        ? 'bg-yellow-50 border-yellow-200 text-yellow-600'
+                                        : 'bg-green-50 border-green-200 text-green-600'
                                     }`}>
                                     <span className="font-bold text-sm uppercase tracking-wide">
                                         {client.isBlocked ? 'Service Suspended' : dueAmount > 0 ? 'Payment Due' : 'Active'}
