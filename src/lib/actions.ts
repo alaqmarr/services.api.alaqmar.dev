@@ -55,6 +55,7 @@ const ClientSchema = z.object({
   domainExpiry: z.string().optional(),
   domainBoughtAt: z.string().optional(),
   domainProvider: z.string().optional(),
+  maintenanceMode: z.string().optional(),
 });
 
 const CreateClient = ClientSchema.omit({ id: true });
@@ -77,6 +78,7 @@ export async function createClient(
     domainExpiry: formData.get("domainExpiry"),
     domainBoughtAt: formData.get("domainBoughtAt"),
     domainProvider: formData.get("domainProvider"),
+    maintenanceMode: formData.get("maintenanceMode"),
   });
 
   if (!validatedFields.success) {
@@ -99,6 +101,7 @@ export async function createClient(
     domainExpiry,
     domainBoughtAt,
     domainProvider,
+    maintenanceMode,
   } = validatedFields.data;
 
   try {
@@ -121,6 +124,7 @@ export async function createClient(
         domainExpiry: domainExpiry ? new Date(domainExpiry) : null,
         domainBoughtAt: domainBoughtAt ? new Date(domainBoughtAt) : null,
         domainProvider: domainProvider || null,
+        maintenanceMode: maintenanceMode === "on",
       },
     });
 
@@ -169,6 +173,7 @@ export async function updateClient(
     domainExpiry: formData.get("domainExpiry"),
     domainBoughtAt: formData.get("domainBoughtAt"),
     domainProvider: formData.get("domainProvider"),
+    maintenanceMode: formData.get("maintenanceMode"),
   });
 
   if (!validatedFields.success) {
@@ -191,6 +196,7 @@ export async function updateClient(
     domainExpiry,
     domainBoughtAt,
     domainProvider,
+    maintenanceMode,
   } = validatedFields.data;
 
   try {
@@ -213,6 +219,7 @@ export async function updateClient(
         domainExpiry: domainExpiry ? new Date(domainExpiry) : undefined,
         domainBoughtAt: domainBoughtAt ? new Date(domainBoughtAt) : undefined,
         domainProvider: domainProvider || undefined,
+        maintenanceMode: maintenanceMode === "on",
       },
     });
   } catch (error) {
@@ -231,6 +238,22 @@ export async function deleteClient(id: string) {
     revalidatePath("/dashboard");
   } catch (error) {
     return;
+  }
+}
+
+export async function toggleMaintenanceMode(
+  id: string,
+  currentStatus: boolean,
+) {
+  try {
+    await prisma.client.update({
+      where: { id },
+      data: { maintenanceMode: !currentStatus },
+    });
+    revalidatePath("/dashboard");
+    return { success: true, message: "Maintenance mode toggled." };
+  } catch (error) {
+    return { success: false, message: "Failed to toggle maintenance mode." };
   }
 }
 

@@ -3,10 +3,11 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getDashboardStats, getRecentTransactions, getUpcomingRenewals } from '@/lib/data';
 import { DashboardStats } from '@/app/ui/dashboard/dashboard-stats';
-import ClientTable from '@/app/ui/dashboard/client-table';
+import ClientGrid from '@/app/ui/dashboard/client-grid';
 import { UpcomingRenewals } from '@/app/ui/dashboard/upcoming-renewals';
 import { prisma } from '@/lib/prisma';
 import { formatDistanceToNow } from 'date-fns';
+import PageHeader from '@/app/ui/page-header';
 
 export const metadata: Metadata = {
     title: 'Dashboard',
@@ -28,19 +29,19 @@ export default async function Page() {
 
     return (
         <main className="w-full space-y-8">
-            <div className="flex items-end justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-foreground tracking-tight">Dashboard</h1>
-                    <p className="text-sm text-secondary mt-1">Overview of your business at a glance.</p>
-                </div>
-                <Link
-                    href="/dashboard/create"
-                    className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-semibold text-background shadow-sm transition-all hover:opacity-90 active:scale-[0.97]"
-                >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                    <span className="hidden sm:inline">New Client</span>
-                </Link>
-            </div>
+            <PageHeader
+                title="Dashboard"
+                description="Overview of your business at a glance."
+                actions={
+                    <Link
+                        href="/dashboard/create"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl bg-foreground px-5 text-sm font-semibold text-background shadow-sm transition-all hover:opacity-90 active:scale-[0.97]"
+                    >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                        <span className="hidden sm:inline">New Client</span>
+                    </Link>
+                }
+            />
 
             <DashboardStats stats={stats} />
 
@@ -83,7 +84,7 @@ export default async function Page() {
                     <h2 className="text-lg font-bold text-foreground">Clients</h2>
                     <span className="text-xs text-secondary">{clients.length} total</span>
                 </div>
-                <ClientTable clients={clients} />
+                <ClientGrid clients={clients} />
             </div>
         </main>
     );

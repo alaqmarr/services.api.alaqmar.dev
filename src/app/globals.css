@@ -27,27 +27,17 @@
 }
 
 :root {
-  /* Warm/Premium Light Mode */
-  --background: #fdfcf8; /* Warm White/Cream */
-  --foreground: #2d2a26; /* Soft Charcoal */
-  --primary: #d4a373; /* Muted Gold/Sand */
-  --secondary: #e6ccb2; /* Pale Sand */
-  --accent: #ccd5ae; /* Soft Sage */
-  --card-bg: #ffffff;
-  --card-border: #e5e5e5;
+  /* Enforced Deep Warm Dark Mode */
+  --background: #1c1917; /* Warm Black/Espresso */
+  --foreground: #e7e5e4; /* Warm Gray */
+  --primary: #f7e8b1; /* User Requested: Light Gold/Cream */
+  --secondary: #937181; /* User Requested: Muted Mauve */
+  --card-bg: #292524; /* Darker Stone */
+  --card-border: #44403c;
+  --accent: #ccd5ae; /* Soft Sage (preserved) */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Deep Warm Dark Mode */
-    --background: #1c1917; /* Warm Black/Espresso */
-    --foreground: #e7e5e4; /* Warm Gray */
-    --primary: #d4a373; /* Keep Gold */
-    --secondary: #a8a29e; /* Muted Stone */
-    --card-bg: #292524; /* Darker Stone */
-    --card-border: #44403c;
-  }
-}
+/* No light mode override needed */
 
 body {
   background: var(--background);
@@ -60,17 +50,10 @@ body {
 
 /* Glass Cards */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(41, 37, 36, 0.6); /* Warm dark glass */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--card-border);
-}
-
-@media (prefers-color-scheme: dark) {
-  .glass-panel {
-      background: rgba(41, 37, 36, 0.6); /* Warm dark glass */
-      border: 1px solid rgba(255, 255, 255, 0.05);
-  }
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Rounded Bento Grid Styles */

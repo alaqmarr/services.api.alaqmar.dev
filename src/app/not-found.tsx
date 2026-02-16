@@ -1,28 +1,41 @@
+
 import Link from 'next/link';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'; // Using outline for consistency
 
 export default function NotFound() {
     return (
-        <main className="grid min-h-screen place-items-center bg-[#fdfcf8] px-6 py-24 sm:py-32 lg:px-8 relative overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#d4a373] rounded-full mix-blend-multiply filter blur-3xl opacity-5 pointer-events-none"></div>
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground p-4">
+            <div className="rounded-3xl bg-card-bg border border-card-border p-12 text-center max-w-lg w-full relative overflow-hidden">
 
-            <div className="text-center relative z-10">
-                <p className="text-base font-bold text-[#bc8a5f]">404</p>
-                <h1 className="mt-4 text-3xl font-bold tracking-tight text-[#2d2a26] sm:text-5xl font-sans">Page not found</h1>
-                <p className="mt-6 text-base leading-7 text-[#78716c]">
-                    Sorry, we couldn’t find the page you’re looking for. It might have been moved or doesn't exist.
+                {/* Glow Effect */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 mb-8 ring-1 ring-primary/20">
+                    <ExclamationTriangleIcon className="h-10 w-10 text-primary" />
+                </div>
+
+                <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">
+                    404 - Signal Lost
+                </h2>
+                <p className="text-secondary mb-8 leading-relaxed">
+                    The requested resource could not be found. It may have been moved, deleted, or never existed in this sector.
                 </p>
-                <div className="mt-10 flex items-center justify-center gap-x-6">
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link
+                        href="/dashboard"
+                        className="rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-background hover:bg-primary/90 transition-all transform hover:scale-105"
+                    >
+                        Return to Dashboard
+                    </Link>
                     <Link
                         href="/"
-                        className="rounded-xl bg-[#1c1917] px-5 py-3 text-sm font-semibold text-[#fdfcf8] shadow-sm hover:bg-[#2d2a26] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1c1917] transition-all hover:scale-105"
+                        className="rounded-xl border border-card-border bg-transparent px-6 py-3 text-sm font-semibold text-secondary hover:text-foreground hover:bg-white/5 transition-all"
                     >
-                        Go back home
-                    </Link>
-                    <Link href="/docs" className="text-sm font-semibold text-[#2d2a26] hover:text-[#d4a373] transition-colors">
-                        View Documentation <span aria-hidden="true">&rarr;</span>
+                        Go Home
                     </Link>
                 </div>
             </div>
-        </main>
+        </div>
     );
 }

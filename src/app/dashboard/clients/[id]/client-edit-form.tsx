@@ -144,6 +144,36 @@ export default function ClientEditForm({
                     </div>
                 </div>
 
+                {/* Client Settings / Danger Zone */}
+                <div className="rounded-2xl bg-card-bg border border-red-500/20 p-6">
+                    <h2 className="text-sm font-semibold text-red-500 mb-5">Client Settings</h2>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-medium text-foreground">Maintenance Mode</p>
+                            <p className="text-xs text-secondary">Temporarily disable the client's site.</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                name="maintenanceMode"
+                                defaultChecked={client.maintenanceMode}
+                                className="sr-only peer"
+                                onChange={async (e) => {
+                                    // Optimistic toggle? Or separate action?
+                                    // Since this is inside the main form, it might be confusing if it submits the whole form.
+                                    // Better to use a separate button or handle it via a specific small action separate from the main form submit?
+                                    // But here we are inside the <form>.
+                                    // If I make it a controlled input, it will be submitted with the form.
+                                    // I need to ensure updateClient handles 'maintenanceMode' in formData.
+                                    // Let's check updateClient in actions.ts.
+                                }}
+                            />
+                            <div className="w-11 h-6 bg-card-border peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                        </label>
+                    </div>
+                    {/* Note: The above checkbox will submit 'on' if checked. I need to handle this in updateClient or distinct action. */}
+                </div>
+
                 <div className="pt-2">
                     <button type="submit" className="rounded-xl bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-all hover:opacity-90 active:scale-[0.98]">
                         Save Changes
