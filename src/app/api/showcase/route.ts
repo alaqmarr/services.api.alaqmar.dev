@@ -7,9 +7,8 @@ export async function GET() {
   try {
     const projects = await prisma.showcase.findMany({
       orderBy: {
-        sortOrder: "asc",
+        createdAt: "desc", // Changed from sortOrder to createdAt
       },
-      // You can filter by isFeatured if needed, but usually portfolio shows all projects
     });
 
     return NextResponse.json({ success: true, data: projects });

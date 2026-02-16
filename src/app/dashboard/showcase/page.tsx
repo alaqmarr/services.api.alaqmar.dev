@@ -1,3 +1,4 @@
+
 import { prisma } from '@/lib/prisma';
 import CreateProjectForm from './create-project-form';
 import { deleteProject } from '@/lib/actions';
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function ShowcasePage() {
     const projects = await prisma.showcase.findMany({
-        orderBy: { sortOrder: 'asc' },
+        orderBy: { createdAt: 'desc' }, // sortOrder likely removed, fallback to createdAt
     });
 
     return (
@@ -24,8 +25,9 @@ export default async function ShowcasePage() {
                     {projects.map((project) => (
                         <div key={project.id} className="rounded-2xl bg-card-bg border border-card-border p-5 flex flex-col sm:flex-row gap-5 group hover:border-primary/30 transition-all">
                             <div className="w-full sm:w-28 h-28 rounded-xl bg-background overflow-hidden flex-shrink-0">
-                                {project.image ? (
-                                    <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                                {project.imageUrl ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-secondary/20 text-3xl">📷</div>
                                 )}
@@ -35,14 +37,13 @@ export default async function ShowcasePage() {
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="min-w-0">
                                             <h3 className="font-bold text-foreground truncate">{project.title}</h3>
-                                            {project.slug && <p className="text-xs text-secondary/50 font-mono mt-0.5">/{project.slug}</p>}
                                         </div>
                                         <div className="flex gap-1.5 flex-shrink-0">
                                             {project.isFeatured && (
                                                 <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-500/10 px-2 py-0.5 rounded">★ Featured</span>
                                             )}
-                                            {project.liveUrl && (
-                                                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded hover:bg-primary/20">Live ↗</a>
+                                            {project.siteUrl && (
+                                                <a href={project.siteUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded hover:bg-primary/20">Live ↗</a>
                                             )}
                                         </div>
                                     </div>

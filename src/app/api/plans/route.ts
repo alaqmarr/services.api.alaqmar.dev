@@ -10,7 +10,7 @@ export async function GET() {
         displayOnPortfolio: true,
       },
       orderBy: {
-        sortOrder: "asc",
+        createdAt: "desc", // Changed from sortOrder to createdAt
       },
     });
 

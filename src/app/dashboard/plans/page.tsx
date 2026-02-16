@@ -1,3 +1,4 @@
+
 import { prisma } from '@/lib/prisma';
 import CreatePlanForm from './create-plan-form';
 import { deletePlan } from '@/lib/actions';
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function PlansPage() {
     const plans = await prisma.plan.findMany({
-        orderBy: { sortOrder: 'asc' },
+        orderBy: { createdAt: 'desc' }, // sortOrder removed, fallback to createdAt
     });
 
     return (
@@ -36,8 +37,8 @@ export default async function PlansPage() {
                                         {plan.displayOnPortfolio && <span className="text-emerald-600">🌐 Public</span>}
                                     </div>
                                     <div className="flex gap-3 text-xs text-secondary">
-                                        <span><span className="text-emerald-500 font-bold">✓</span> {plan.inclusions.length} included</span>
-                                        <span><span className="text-red-400 font-bold">✗</span> {plan.exclusions.length} excluded</span>
+                                        <span className="flex items-center gap-1"><span className="text-emerald-500 font-bold">✓</span> {plan.inclusions.length}</span>
+                                        <span className="flex items-center gap-1"><span className="text-red-400 font-bold">✗</span> {plan.exclusions.length}</span>
                                     </div>
                                 </div>
                                 <div className="flex justify-end mt-4 pt-3 border-t border-card-border">

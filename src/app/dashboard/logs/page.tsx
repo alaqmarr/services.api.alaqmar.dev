@@ -45,7 +45,7 @@ export default async function LogsPage() {
                                         </td>
                                         <td className="px-6 py-4 text-secondary">
                                             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary/10 text-secondary">
-                                                {log.entity}
+                                                {log.entityType || 'unknown'}
                                             </span>
                                             {log.entityId && <span className="ml-1 text-xs text-secondary/50 font-mono">#{log.entityId.slice(0, 5)}</span>}
                                         </td>
@@ -56,7 +56,7 @@ export default async function LogsPage() {
                                             {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}
                                         </td>
                                         <td className="px-6 py-4 text-secondary text-xs max-w-xs truncate font-mono">
-                                            {log.metadata ? JSON.stringify(log.metadata) : '-'}
+                                            {log.details || '-'}
                                         </td>
                                     </tr>
                                 ))

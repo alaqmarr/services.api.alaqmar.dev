@@ -25,7 +25,7 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ i
                         ❄️
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight">Welcome, {client.name}</h1>
-                    {client.company && <p className="text-secondary">{client.company}</p>}
+                    {client.domain && <p className="text-secondary">{client.domain}</p>}
                 </div>
 
                 {/* Status Card */}
@@ -33,7 +33,7 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ i
                     <p className="text-sm text-secondary uppercase tracking-wider font-semibold mb-2">Total Paid</p>
                     <div className="text-5xl font-bold tracking-tight text-foreground">
                         ₹{client.transactions
-                            .filter(t => t.status === 'completed')
+                            .filter(t => t.type === 'PAYMENT') // Filter by PAYMENT type
                             .reduce((sum, t) => sum + Number(t.amount), 0)
                             .toLocaleString()}
                     </div>
@@ -50,10 +50,9 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ i
                                 client.transactions.map(tx => (
                                     <div key={tx.id} className="p-5 flex items-center justify-between hover:bg-primary/5 transition-colors">
                                         <div className="flex items-center gap-4">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' :
-                                                    tx.status === 'failed' ? 'bg-red-500/10 text-red-500' : 'bg-amber-500/10 text-amber-500'
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.type === 'PAYMENT' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'
                                                 }`}>
-                                                {tx.status === 'completed' ? '✓' : tx.status === 'failed' ? '✕' : '⏳'}
+                                                {tx.type === 'PAYMENT' ? '✓' : '⟲'}
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-foreground">Payment</p>
@@ -62,7 +61,7 @@ export default async function ClientPortalPage({ params }: { params: Promise<{ i
                                         </div>
                                         <div className="text-right">
                                             <p className="font-bold text-foreground">₹{Number(tx.amount).toLocaleString()}</p>
-                                            <p className="text-xs text-secondary capitalize">{tx.status}</p>
+                                            <p className="text-xs text-secondary capitalize">{tx.type.toLowerCase()}</p>
                                         </div>
                                     </div>
                                 ))
